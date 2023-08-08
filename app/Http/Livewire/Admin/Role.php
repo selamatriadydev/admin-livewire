@@ -11,15 +11,14 @@ class Role extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
-    public $name;
-    public $role_id;
+    public $name,$role_id, $actCreate= true, $actUpdate= true, $actDelete=true, $actDetail = false;
     public $updateMode = false;
     public $showOffcanvasAction = 'store';
     public $showOffcanvas = false;
-    protected $listeners = ['roleStore' => 'hideOffcanvas'];
-    // public $roleData = [];
+    protected $listeners = ['roleStore' => 'hideOffcanvas', 'deleteData'];
     public $tableHead = ['Nama'];
     public $tableBody = ['name'];
+    
 
 
     protected $rules = [
@@ -49,9 +48,12 @@ class Role extends Component
         try {
             ModelsRole::create(['name' => $this->name]);
             session()->flash('success', 'Users Created Successfully.');
-            $this->showOffcanvas = false;
-            $this->resetInputFields();
-            // $this->emit("roleStore");//// Close model to using to jquery
+            $this->hideOffcanvas();
+            $this->dispatchBrowserEvent('swal:alert', [
+                'type' => 'success',  
+                'message' => 'Role Created Successfully!', 
+                'text' => 'It will list on users table soon.'
+            ]);
         } catch (\Throwable $e) {
              session()->flash('error', $e->getMessage());
         }
@@ -59,15 +61,9 @@ class Role extends Component
     public function edit($id){
         $this->showOffcanvas = true;
         $this->showOffcanvasAction='update';
-        // $this->updateMode = true;
         $role = ModelsRole::find($id);
         $this->role_id = $role->id;
         $this->name = $role->name;
-    }
-
-    public function cancel(){
-        $this->updateMode = false;
-        $this->resetInputFields();
     }
 
     public function update(){
@@ -77,22 +73,51 @@ class Role extends Component
             if($role){
                 $role->update(['name' => $this->name]);
             }
-            $this->showOffcanvas = false;
             $this->showOffcanvasAction='store';
-            session()->flash('success', 'Users Updated Successfully.');
-            $this->resetInputFields();
+            $this->hideOffcanvas();
+            $this->dispatchBrowserEvent('swal:alert', [
+                'type' => 'success',  
+                'message' => 'Role Updated Successfully!', 
+                'text' => 'It will list on users table soon.'
+            ]);
         } catch (\Throwable $e) {
             return session()->flash('error', $e->getMessage());
         }
     }
 
-    public function delete($id){
+    public function deleteConfirm($id)
+    {
+        $role = ModelsRole::find($id);
+        if($role){
+            $this->dispatchBrowserEvent('swal:confirm', [
+                    'id' => $role->id,
+                    'type' => 'warning',  
+                    'message' => 'Are you sure delete '.$role->name.' ?', 
+                    'text' => 'If deleted, you will not be able to recover this imaginary file!'
+                ]);
+        }else{
+            $this->dispatchBrowserEvent('swal:alert', [
+                'type' => 'danger',  
+                'message' => 'Data is not foud!', 
+                'text' => 'please check data.'
+            ]);
+        }
+    }
+    public function deleteData($id){
         $role = ModelsRole::find($id);
         if($role){
             $role->delete();
-            session()->flash('success', 'Users Deleted Successfully.');
+            $this->dispatchBrowserEvent('swal:alert', [
+                'type' => 'success',  
+                'message' => 'Role Updated Successfully!', 
+                'text' => 'It will list on users table soon.'
+            ]);
         }else{
-            session()->flash('error', 'data not found');
+            $this->dispatchBrowserEvent('swal:alert', [
+                'type' => 'danger',  
+                'message' => 'Data is not foud!', 
+                'text' => 'please check data.'
+            ]);
         }
     }
 }
