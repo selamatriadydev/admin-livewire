@@ -24,18 +24,26 @@
                             </div>
                             <div class="mt-3 mt-md-0">
                                 @if ($actCreate)
-                                    <a href="#!" class="btn btn-primary ms-2" wire:click="toggleOffcanvas"> New Data </a>
+                                    <button type="button" wire:click="toggleOffcanvas" class="btn btn-primary ms-2" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
+                                        New Data
+                                    </button>
                                 @endif
-                                <a href="#!" class="btn btn-outline-white ms-2">Import</a>
-                                <a href="#!" class="btn btn-outline-white ms-2">Export</a>
+                                @if (count($selectedItems))
+                                    <button type="button" wire:click="deleteSelectedItemsConfirm" class="btn btn-danger ms-2" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
+                                        Delete Selected {{ count($selectedItems) }} Data
+                                    </button>
+                                @endif
+                                {{-- <a href="#!" class="btn btn-outline-white ms-2">Import</a>
+                                <a href="#!" class="btn btn-outline-white ms-2">Export</a> --}}
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive table-card" >
-                                <table class="table">
-                                    <thead >
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
                                         <tr>
-                                            <th scope="col">#</th>
+                                            <th scope="col" width="6%">Check</th>
+                                            <th scope="col" width="5%">#</th>
                                             @foreach ($tableHead as $head)
                                                 <th scope="col">{{ $head }}</th>
                                             @endforeach
@@ -43,34 +51,40 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($tableData as $data)
+                                        @forelse ($tableData as $item)
                                             <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" wire:model="selectedItems" value="{{ $item->id }}">
+                                                    </div>
+                                                </td>
                                                 <th scope="row">{{ $loop->iteration }}</th>
                                                     @foreach ($tableBody as $tdata)
-                                                        <td>{{ $data->$tdata }}</td>
+                                                        <td>{{ $item->$tdata }}</td>
                                                     @endforeach
                                                     <td>
                                                         @if ($actDetail)
-                                                            <a  href="#!" class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-placement="top"
-                                                            title="Tooltip on top">
+                                                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
                                                                 Detail
-                                                            </a>
+                                                            </button>
                                                         @endif
                                                         @if ($actUpdate)
-                                                            <a wire:click="edit('{{ $data->id }}')" href="#!" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-placement="top"
-                                                            title="Tooltip on top">
+                                                            <button type="button" wire:click="edit('{{ $item->id }}')" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Edit data">
                                                                 Edit
-                                                            </a>
+                                                            </button>
                                                         @endif
                                                         @if ($actDelete)
-                                                            <a wire:click="deleteConfirm('{{ $data->id }}')" href="#!" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-placement="top"
-                                                                title="Tooltip on top">
+                                                            <button type="button" wire:click="deleteConfirm('{{ $item->id }}')" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Delete data">
                                                                     Delete
-                                                                </a>
+                                                                </button>
                                                         @endif
                                                     </td>
                                             </tr>
-                                        @endforeach
+                                        @empty
+                                            <tr>
+                                                <td colspan="4" class="text-center">Data tidak tersedia</td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -98,40 +112,17 @@
                 </form>
             </div>
             <div class="offcanvas-footer">
-                <button type="button" wire:click.prevent="{{ $showOffcanvasAction }}" class="btn btn-primary">Save</button>
+                <button type="button" wire:click.prevent="{{ $activeOffcanvasAction }}" class="btn btn-primary">Save</button>
                 <button type="button" class="btn btn-secondary" wire:click="hideOffcanvas" data-bs-dismiss="offcanvas" aria-label="Close">Close</button>
             </div>
         </div>
     </main>
 </div>
-
-@push('script')
-    <script type="text/javascript">
-        // window.livewire.on('userStore', () => {
-        //     $('body').css();
-        //     $('#offcanvasRight').removeClass('show');
-        //     // $('#exampleModal').modal('hide');
-        // });
-        window.addEventListener('swal:alert', event => { 
-            swal({
-                title: event.detail.message,
-                text: event.detail.text,
-                icon: event.detail.type,
-            });
-        });
-        window.addEventListener('swal:confirm', event => { 
-            swal({
-                title: event.detail.message,
-                text: event.detail.text,
-                icon: event.detail.type,
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    window.livewire.emit('deleteData', event.detail.id);
-                }
-            });
+<livewire:component.swal-alert />
+@push('scripts')
+    <script>
+        document.addEventListener('livewire:load', function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
         });
     </script>
 @endpush

@@ -2,58 +2,58 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Http\Livewire\Component\OffCanvasTrait;
+use App\Http\Livewire\Component\SwalAlertTrait;
 use App\Models\Role as ModelsRole;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class Role extends Component
 {
+    use SwalAlertTrait;
+    use OffCanvasTrait;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
     public $name,$role_id, $actCreate= true, $actUpdate= true, $actDelete=true, $actDetail = false;
     public $updateMode = false;
-    public $showOffcanvasAction = 'store';
-    public $showOffcanvas = false;
-    protected $listeners = ['roleStore' => 'hideOffcanvas', 'deleteData'];
+    public $dataAction = 'store';
+    protected $listeners = ['deleteData', 'deleteSelectedItems'];
+    public $selectedItems = [];
     public $tableHead = ['Nama'];
     public $tableBody = ['name'];
     
+    public function rules()
+    {
+        $rules = [
+            'name' => 'required|unique:roles,name',
+        ];
 
+        // Append the id condition when updating
+        if ($this->showOffcanvasAction === 'update') {
+            $rules['name'] .= ',' . $this->role_id;
+        }
 
-    protected $rules = [
-        'name' => 'required',
-    ];
+        return $rules;
+    }
 
     private function resetInputFields(){
         $this->name = '';
     }
-    public function toggleOffcanvas()
+    public function openOffcanvas()
     {
-        $this->showOffcanvas = !$this->showOffcanvas;
-    }
-    public function hideOffcanvas()
-    {
-        $this->showOffcanvas = false;
-        $this->resetInputFields();
-    }
-    public function render()
-    {
-        $tableData = ModelsRole::paginate(10);
-        return view('livewire.admin.role', compact('tableData'));
+        if (in_array($this->dataAction, $this->showOffcanvasAction)) {
+            $this->toggleOffcanvas();
+        }
     }
 
     public function store(){
         $this->validate();
         try {
             ModelsRole::create(['name' => $this->name]);
-            session()->flash('success', 'Users Created Successfully.');
+            $this->resetInputFields();
             $this->hideOffcanvas();
-            $this->dispatchBrowserEvent('swal:alert', [
-                'type' => 'success',  
-                'message' => 'Role Created Successfully!', 
-                'text' => 'It will list on users table soon.'
-            ]);
+            $this->alertCreate();
         } catch (\Throwable $e) {
              session()->flash('error', $e->getMessage());
         }
@@ -72,14 +72,14 @@ class Role extends Component
             $role = ModelsRole::find($this->role_id);
             if($role){
                 $role->update(['name' => $this->name]);
+                $this->resetInputFields();
+                $this->hideOffcanvas();
+                $this->alertUpdate();
+            }else{
+                $this->resetInputFields();
+                $this->hideOffcanvas();
+                $this->alertNoData();
             }
-            $this->showOffcanvasAction='store';
-            $this->hideOffcanvas();
-            $this->dispatchBrowserEvent('swal:alert', [
-                'type' => 'success',  
-                'message' => 'Role Updated Successfully!', 
-                'text' => 'It will list on users table soon.'
-            ]);
         } catch (\Throwable $e) {
             return session()->flash('error', $e->getMessage());
         }
@@ -89,35 +89,48 @@ class Role extends Component
     {
         $role = ModelsRole::find($id);
         if($role){
-            $this->dispatchBrowserEvent('swal:confirm', [
-                    'id' => $role->id,
-                    'type' => 'warning',  
-                    'message' => 'Are you sure delete '.$role->name.' ?', 
-                    'text' => 'If deleted, you will not be able to recover this imaginary file!'
-                ]);
+            $this->alertConfirm($role->id, $role->name, 'deleteData');
         }else{
-            $this->dispatchBrowserEvent('swal:alert', [
-                'type' => 'danger',  
-                'message' => 'Data is not foud!', 
-                'text' => 'please check data.'
-            ]);
+            $this->alertNoData();
         }
     }
     public function deleteData($id){
         $role = ModelsRole::find($id);
         if($role){
             $role->delete();
-            $this->dispatchBrowserEvent('swal:alert', [
-                'type' => 'success',  
-                'message' => 'Role Updated Successfully!', 
-                'text' => 'It will list on users table soon.'
-            ]);
+            $this->alertRemove();
         }else{
-            $this->dispatchBrowserEvent('swal:alert', [
-                'type' => 'danger',  
-                'message' => 'Data is not foud!', 
-                'text' => 'please check data.'
-            ]);
+            $this->alertNoData();
         }
+    }
+    public function toggleSelectedItem($itemId)
+    {
+        if (in_array($itemId, $this->selectedItems)) {
+            $this->selectedItems = array_diff($this->selectedItems, [$itemId]);
+        } else {
+            $this->selectedItems[] = $itemId;
+        }
+    }
+
+    public function deleteSelectedItemsConfirm()
+    {
+        $this->alertConfirm($this->selectedItems, 'Data', 'deleteSelectedItems');
+    }
+    public function deleteSelectedItems()
+    {
+        foreach ($this->selectedItems as $itemId) {
+            $item = ModelsRole::find($itemId);
+            if ($item) {
+                $item->delete();
+            }
+        }
+        $this->selectedItems = [];
+        $this->alertRemove();
+    }
+
+    public function render()
+    {
+        $tableData = ModelsRole::paginate(10);
+        return view('livewire.admin.role', compact('tableData'));
     }
 }

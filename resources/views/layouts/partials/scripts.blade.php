@@ -1,5 +1,5 @@
 <!-- Libs JS -->
-{{-- <script src="{{ asset('dash-ui/vendor/jquery/dist/jquery.min.js') }}"></script> --}}
+<script src="{{ asset('dash-ui/vendor/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('dash-ui/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('dash-ui/vendor/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
 <script src="{{ asset('dash-ui/vendor/feather-icons/dist/feather.min.js') }}"></script>
@@ -15,3 +15,6 @@
 <script src="{{ asset('dash-ui/assets/js/feather.js') }}"></script>
 <script src="{{ asset('dash-ui/assets/js/sidebarMenu.js') }}"></script>
 <!-- endbuild -->
+<script>
+     $('[data-tooltip="tooltip"]').tooltip()
+</script>
