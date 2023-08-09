@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin;
+namespace App\Http\Livewire\Settings;
 
 use App\Http\Livewire\Component\OffCanvasTrait;
 use App\Http\Livewire\Component\SwalAlertTrait;
@@ -131,6 +131,6 @@ class Role extends Component
     public function render()
     {
         $tableData = ModelsRole::paginate(10);
-        return view('livewire.admin.role', compact('tableData'));
+        return view('livewire.settings.role', compact('tableData'));
     }
 }

@@ -5,6 +5,7 @@ trait OffCanvasTrait
 {
     public $showOffcanvasAction = ['store', 'update'];
     public $activeOffcanvasAction = 'store';
+    public $OffcanvasForm = [];
     public $showOffcanvas = false;
 
     public function toggleOffcanvas()
@@ -15,9 +16,19 @@ trait OffCanvasTrait
     {
         $this->showOffcanvas = true;
     }
+    public function modeCreate()
+    {
+        $this->activeOffcanvasAction='store';
+        $this->showOffcanvas = true;
+    }
+    public function modeUpdate()
+    {
+        $this->activeOffcanvasAction='update';
+        $this->showOffcanvas = true;
+    }
     public function hideOffcanvas()
     {
-        $this->showOffcanvasAction='store';
+        $this->activeOffcanvasAction='store';
         $this->showOffcanvas = false;
     }
 
