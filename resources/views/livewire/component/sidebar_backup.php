@@ -8,13 +8,6 @@
             </a>
             <!-- Navbar nav -->
             <ul class="navbar-nav flex-column" id="sideNavbar">
-                @foreach ($sidebarItems as $item)
-                    <li class="nav-item">
-                        <a class="nav-link has-arrow " href="{{ url($item->url) }}">
-                           <i class="fa fa-eye"></i>  {{ $item->title }}
-                        </a>
-                    </li>
-                @endforeach
    
                 <!-- Nav item -->
                 <li class="nav-item">

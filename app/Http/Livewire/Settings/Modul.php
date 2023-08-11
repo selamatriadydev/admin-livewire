@@ -39,13 +39,14 @@ class Modul extends Component
         return $rules;
     }
     public function mount(){
+        $this->is_sidebar = $this->is_sidebar ?? '0';
         $this->OffcanvasForm = [
             ['title' => 'Is Sidebar', 'type' => 'option', 'model' => 'is_sidebar', 'data' => [['value' => 1, 'text' => 'YES'], ['value' => 0, 'text' => 'NO']]],
             ['title' => 'Icon', 'type' => 'text', 'model' => 'icon'],
             ['title' => 'Title', 'type' => 'text', 'model' => 'title'],
             ['title' => 'Url', 'type' => 'text', 'model' => 'url'],
             ['title' => 'Method', 'type' => 'text', 'model' => 'method'],
-            ['title' => 'Slug', 'type' => 'text', 'model' => 'slug'],
+            ['title' => 'Slug', 'type' => 'text', 'model' => 'slug', 'readonly' => 'readonly'],
             ['title' => 'Child', 'type' => 'textarea', 'model' => 'child'],
             ['title' => 'Sort', 'type' => 'number', 'model' => 'sort'],
         ];
@@ -53,18 +54,18 @@ class Modul extends Component
 
     private function resetInputFields(){
         $this->data_id = '';
-        $this->is_sidebar = '';
+        $this->is_sidebar = '0';
         $this->icon = '';
         $this->title = '';
         $this->url = '';
         $this->method = '';
         $this->slug = '';
         $this->child = '';
-        $this->sort = '';
+        $this->sort = '0';
     }
     public function requestData(){
         $data = [];
-        $data['is_sidebar'] = $this->is_sidebar ?? 0;
+        $data['is_sidebar'] = $this->is_sidebar ? $this->is_sidebar : '0';
         $data['icon'] = $this->icon;
         $data['title'] = $this->title;
         $data['url'] = $this->url;
@@ -74,8 +75,8 @@ class Modul extends Component
         }else{
             $data['slug'] = Str::slug($this->title);
         }
-        $data['child'] = $this->child ?? '';
-        $data['sort'] = $this->sort ?? 0;
+        $data['child'] = $this->child ? $this->child : '';
+        $data['sort'] = $this->sort ? $this->sort : '0';
         return $data;
     }
 
@@ -87,8 +88,11 @@ class Modul extends Component
             $this->resetInputFields();
             $this->hideOffcanvas();
             $this->alertCreate();
-        } catch (\Throwable $e) {
-             session()->flash('error', $e->getMessage());
+        } catch (\Exception $e) {
+            $this->alertNoData();
+            $this->resetInputFields();
+            $this->hideOffcanvas();
+            //  session()->flash('error', $e->getMessage());
         }
     }
     public function edit($id){
@@ -107,7 +111,7 @@ class Modul extends Component
             $this->sort = $module->sort;
         }
     }
-
+ 
     public function update(){
         $this->validate();
         try {
@@ -120,9 +124,13 @@ class Modul extends Component
                 $this->alertNoData();
             }
             $this->resetInputFields();
-            // $this->hideOffcanvas();
-        } catch (\Throwable $e) {
-            return session()->flash('error', $e->getMessage());
+            $this->hideOffcanvas();
+        } catch (\Exception $e) {
+            return $this->requestData();
+            $this->alertNoData();
+            $this->resetInputFields();
+            $this->hideOffcanvas();
+            // return $e->getMessage();
         }
     }
 

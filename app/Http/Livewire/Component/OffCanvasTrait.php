@@ -16,6 +16,19 @@ trait OffCanvasTrait
     {
         $this->showOffcanvas = true;
     }
+    public function resetForm()
+    {
+        foreach($this->OffcanvasForm as $form){
+            $propertyName = $form['model'];
+            $value = "";
+            if($form['type'] == 'number'){
+                $value = "0";
+            }elseif($form['type'] == 'option'){
+                $value = "0";
+            }
+            $this->$propertyName = $value;
+        }
+    }
     public function modeCreate()
     {
         $this->activeOffcanvasAction='store';
@@ -30,6 +43,7 @@ trait OffCanvasTrait
     {
         $this->activeOffcanvasAction='store';
         $this->showOffcanvas = false;
+        $this->resetForm();
     }
 
 }

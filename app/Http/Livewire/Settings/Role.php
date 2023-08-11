@@ -28,16 +28,21 @@ class Role extends Component
         $rules = [
             'name' => 'required|unique:roles,name',
         ];
-
         // Append the id condition when updating
-        if ($this->showOffcanvasAction === 'update') {
+        if ($this->activeOffcanvasAction === 'update') {
             $rules['name'] .= ',' . $this->role_id;
         }
 
         return $rules;
     }
+    public function mount(){
+        $this->OffcanvasForm = [
+            ['title' => 'Name', 'type' => 'text', 'model' => 'name'],
+        ];
+    }
 
     private function resetInputFields(){
+        $this->role_id = '';
         $this->name = '';
     }
     public function openOffcanvas()
@@ -55,15 +60,21 @@ class Role extends Component
             $this->hideOffcanvas();
             $this->alertCreate();
         } catch (\Throwable $e) {
-             session()->flash('error', $e->getMessage());
+            $this->alertNoData();
+            $this->resetInputFields();
+            $this->hideOffcanvas();
+            //  session()->flash('error', $e->getMessage());
         }
     }
     public function edit($id){
-        $this->showOffcanvas = true;
-        $this->showOffcanvasAction='update';
         $role = ModelsRole::find($id);
-        $this->role_id = $role->id;
-        $this->name = $role->name;
+        if(!$role){
+            $this->alertNoData();
+        }else{
+            $this->modeUpdate();
+            $this->role_id = $role->id;
+            $this->name = $role->name;
+        }
     }
 
     public function update(){
@@ -81,7 +92,10 @@ class Role extends Component
                 $this->alertNoData();
             }
         } catch (\Throwable $e) {
-            return session()->flash('error', $e->getMessage());
+            $this->alertNoData();
+            $this->resetInputFields();
+            $this->hideOffcanvas();
+            // return session()->flash('error', $e->getMessage());
         }
     }
 
