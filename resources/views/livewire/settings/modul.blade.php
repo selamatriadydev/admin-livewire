@@ -37,57 +37,118 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-responsive table-card" >
-                                        <table class="table table-bordered">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th scope="col" width="6%">Check</th>
-                                                    <th scope="col" width="5%">#</th>
-                                                    @foreach ($tableHead as $head)
-                                                        <th scope="col">{{ $head }}</th>
-                                                    @endforeach
-                                                <th scope="col" width="20%">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($tableData as $item)
-                                                    <tr>
-                                                        <td>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" wire:model="selectedItems" value="{{ $item->id }}">
-                                                            </div>
-                                                        </td>
-                                                        <th scope="row">{{ $loop->iteration }}</th>
-                                                            @foreach ($tableBody as $tdata)
-                                                                <td>{{ $item->$tdata }}</td>
-                                                            @endforeach
-                                                            <td>
-                                                                @if ($actDetail)
-                                                                    <button type="button" class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
-                                                                        Detail
-                                                                    </button>
-                                                                @endif
-                                                                @if ($actUpdate)
-                                                                    <button type="button" wire:click="edit('{{ $item->id }}')" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Edit data">
-                                                                        Edit
-                                                                    </button>
-                                                                @endif
-                                                                @if ($actDelete)
-                                                                    <button type="button" wire:click="deleteConfirm('{{ $item->id }}')" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Delete data">
-                                                                            Delete
+                                    <!-- Accordion Example -->
+                                    <div class="accordion" id="module">
+                                        @foreach ($tableData as $item)
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="head-{{ $item->method }}">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#collapse-{{ $item->method }}" aria-expanded="false"
+                                                    aria-controls="collapse-{{ $item->method }}">
+                                                    {{ $item->title }} #{{ $item->subModule->count() }}
+                                                </button>
+                                            </h2>
+                                            <div id="collapse-{{ $item->method }}" class="accordion-collapse collapse" aria-labelledby="head-{{ $item->method }}" data-bs-parent="#module">
+                                                <div class="accordion-body">
+                                                    @if ($actCreate)
+                                                        <button type="button" wire:click="newPermission('{{ $item->id }}')" class="btn btn-primary ms-2" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
+                                                            New Permission
+                                                        </button>
+                                                    @endif
+                                                    <table class="table table-bordered">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th scope="col" width="5%">#</th>
+                                                                @foreach ($tableHead as $head)
+                                                                    <th scope="col">{{ $head }}</th>
+                                                                @endforeach
+                                                            <th scope="col" width="20%">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th scope="row">{{ $loop->iteration }}</th>
+                                                                @foreach ($tableBody as $tdata)
+                                                                    <td>{{ $item->$tdata }}</td>
+                                                                @endforeach
+                                                                <td>
+                                                                    @if ($actUpdate)
+                                                                        <button type="button" wire:click="edit('{{ $item->id }}')" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Edit data">
+                                                                            Edit
                                                                         </button>
-                                                                @endif
-                                                            </td>
-                                                    </tr>
-                                                @empty
-                                                    <tr>
-                                                        <td colspan="4" class="text-center">Data tidak tersedia</td>
-                                                    </tr>
-                                                @endforelse
-                                            </tbody>
-                                        </table>
+                                                                    @endif
+                                                                    @if ($actDelete)
+                                                                        <button type="button" wire:click="deleteConfirm('{{ $item->id }}')" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Delete data">
+                                                                                Delete
+                                                                            </button>
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    @if ($actCreate)
+                                                        <button type="button" wire:click="newSub('{{ $item->id }}')" class="btn btn-primary ms-2" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
+                                                            New Sub Data
+                                                        </button>
+                                                    @endif
+                                                    @if ($item->subModule->count())
+                                                        <div class="accordion" id="sub-{{ $item->method }}">
+                                                            @foreach ($item->subModule()->get() as $sub)
+                                                                <div class="accordion-item">
+                                                                    <h2 class="accordion-header" id="heading-{{ $sub->method }}">
+                                                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $sub->method }}" aria-expanded="true" aria-controls="collapse-{{ $sub->method }}">
+                                                                            {{ $sub->title }}
+                                                                        </button>
+                                                                    </h2>
+                                                                    <div id="collapse-{{ $sub->method }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $sub->method }}" data-bs-parent="#sub-{{ $item->method }}">
+                                                                        <div class="accordion-body">
+                                                                            @if ($actCreate)
+                                                                                <button type="button" wire:click="newPermission('{{ $item->id }}')" class="btn btn-primary ms-2" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
+                                                                                    New Sub Permission
+                                                                                </button>
+                                                                            @endif
+                                                                            <table class="table table-bordered">
+                                                                                <thead class="table-light">
+                                                                                    <tr>
+                                                                                        <th scope="col" width="5%">#</th>
+                                                                                        @foreach ($tableHead as $head)
+                                                                                            <th scope="col">{{ $head }}</th>
+                                                                                        @endforeach
+                                                                                    <th scope="col" width="20%">Action</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <th scope="row">{{ $loop->iteration }}</th>
+                                                                                        @foreach ($tableBody as $tdata)
+                                                                                            <td>{{ $sub->$tdata }}</td>
+                                                                                        @endforeach
+                                                                                        <td>
+                                                                                            @if ($actUpdate)
+                                                                                                <button type="button" wire:click="edit('{{ $sub->id }}')" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Edit data">
+                                                                                                    Edit
+                                                                                                </button>
+                                                                                            @endif
+                                                                                            @if ($actDelete)
+                                                                                                <button type="button" wire:click="deleteConfirm('{{ $sub->id }}')" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Delete data">
+                                                                                                        Delete
+                                                                                                    </button>
+                                                                                            @endif
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
                                     </div>
-                                    {{ $tableData->links() }}
                                 </div>
                             </div>
                         </div>

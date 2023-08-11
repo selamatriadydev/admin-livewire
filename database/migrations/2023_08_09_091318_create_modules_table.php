@@ -15,7 +15,7 @@ class CreateModulesTable extends Migration
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->bigInteger('parrent_id')->default(0); 
+            $table->uuid('parrent_id')->default(0); 
             $table->string('icon')->nullable();
             $table->boolean('is_sidebar')->default(0);
             $table->string('title');

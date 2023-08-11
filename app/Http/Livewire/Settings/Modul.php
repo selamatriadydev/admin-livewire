@@ -16,43 +16,68 @@ class Modul extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
-    public $is_sidebar,$icon,$title, $url, $method, $slug, $child,$sort,$data_id;
+    public $parrent_id,$is_sidebar,$icon,$title, $url, $method, $slug, $child,$sort,$data_id;
     public $actCreate= true, $actUpdate= true, $actDelete=true, $actDetail = false;
-    // public $updateMode = false;
     protected $listeners = ['deleteData', 'deleteSelectedItems'];
     public $selectedItems = [];
     public $tableHead = ['Sidebar', 'Icon', 'Title', 'child', 'Sort'];
     public $tableBody = ['sidebar_status', 'icon', 'title', 'child', 'sort'];
+    public $tableData = [];
     
     public function rules()
     {
         $rules = [
             'title' => 'required|unique:modules,title',
-            'url' => 'required',
-            'method' => 'required',
+            'url' => 'required|unique:modules,url',
+            'method' => 'required|unique:modules,method',
         ];
         // Append the id condition when updating
         if ($this->activeOffcanvasAction == 'update') {
             $rules['title'] .= ',' . $this->data_id;
+            $rules['url'] .= ',' . $this->data_id;
+            $rules['method'] .= ',' . $this->data_id;
         }
 
         return $rules;
     }
     public function mount(){
-        $this->is_sidebar = $this->is_sidebar ?? '0';
-        $this->OffcanvasForm = [
+        $this->formGenerate();
+        $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
+        $this->parrent_id = '0';
+        $this->is_sidebar = '0';
+        // $this->OffcanvasForm = [
+        //     ['title' => 'Is Sidebar', 'type' => 'option', 'model' => 'is_sidebar', 'data' => [['value' => 1, 'text' => 'YES'], ['value' => 0, 'text' => 'NO']]],
+        //     ['title' => 'Icon', 'type' => 'text', 'model' => 'icon'],
+        //     ['title' => 'Title', 'type' => 'text', 'model' => 'title'],
+        //     ['title' => 'Url', 'type' => 'text', 'model' => 'url'],
+        //     ['title' => 'Method', 'type' => 'text', 'model' => 'method'],
+        //     ['title' => 'Slug', 'type' => 'text', 'model' => 'slug', 'readonly' => 'readonly'],
+        //     ['title' => 'Child', 'type' => 'textarea', 'model' => 'child'],
+        //     ['title' => 'Sort', 'type' => 'number', 'model' => 'sort'],
+        // ];
+    }
+    public function formGenerate(){
+        $formGenerate = [
             ['title' => 'Is Sidebar', 'type' => 'option', 'model' => 'is_sidebar', 'data' => [['value' => 1, 'text' => 'YES'], ['value' => 0, 'text' => 'NO']]],
             ['title' => 'Icon', 'type' => 'text', 'model' => 'icon'],
             ['title' => 'Title', 'type' => 'text', 'model' => 'title'],
             ['title' => 'Url', 'type' => 'text', 'model' => 'url'],
             ['title' => 'Method', 'type' => 'text', 'model' => 'method'],
-            ['title' => 'Slug', 'type' => 'text', 'model' => 'slug', 'readonly' => 'readonly'],
+            ['title' => 'Slug', 'type' => 'text', 'model' => 'slug'],
             ['title' => 'Child', 'type' => 'textarea', 'model' => 'child'],
             ['title' => 'Sort', 'type' => 'number', 'model' => 'sort'],
         ];
+        if ($this->activeOffcanvasAction == 'store') {
+            $this->OffcanvasForm = array_filter($formGenerate, function ($field) {
+                return $field['model'] !== 'slug';
+            });
+        }else{
+            $this->OffcanvasForm = $formGenerate;
+        }
     }
 
     private function resetInputFields(){
+        $this->parrent_id = '0';
         $this->data_id = '';
         $this->is_sidebar = '0';
         $this->icon = '';
@@ -65,6 +90,7 @@ class Modul extends Component
     }
     public function requestData(){
         $data = [];
+        $data['parrent_id'] = $this->parrent_id ? $this->parrent_id : '0';
         $data['is_sidebar'] = $this->is_sidebar ? $this->is_sidebar : '0';
         $data['icon'] = $this->icon;
         $data['title'] = $this->title;
@@ -88,11 +114,12 @@ class Modul extends Component
             $this->resetInputFields();
             $this->hideOffcanvas();
             $this->alertCreate();
+            $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
         } catch (\Exception $e) {
-            $this->alertNoData();
-            $this->resetInputFields();
-            $this->hideOffcanvas();
-            //  session()->flash('error', $e->getMessage());
+            $this->alertValidate();
+            // return $this->requestData();
+            // $this->resetInputFields();
+            // return $e->getMessage();
         }
     }
     public function edit($id){
@@ -101,7 +128,9 @@ class Modul extends Component
             $this->alertNoData();
         }else{
             $this->modeUpdate();
+            $this->formGenerate();
             $this->data_id = $module->id;
+            $this->parrent_id = $module->parrent_id;
             $this->title = $module->title;
             $this->url = $module->url;
             $this->icon = $module->icon;
@@ -109,6 +138,16 @@ class Modul extends Component
             $this->slug = $module->slug;
             $this->child = $module->child;
             $this->sort = $module->sort;
+        }
+    }
+
+    public function newSub($id){
+        $module = Module::find($id);
+        if(!$module){
+            $this->alertNoData();
+        }else{
+            $this->modeCreate();
+            $this->parrent_id = $module->id;
         }
     }
  
@@ -120,16 +159,14 @@ class Modul extends Component
                 $dataUpdate = $this->requestData();
                 $role->update($dataUpdate);
                 $this->alertUpdate();
+                $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
             }else{
                 $this->alertNoData();
             }
             $this->resetInputFields();
             $this->hideOffcanvas();
         } catch (\Exception $e) {
-            return $this->requestData();
-            $this->alertNoData();
-            $this->resetInputFields();
-            $this->hideOffcanvas();
+            $this->alertValidate();
             // return $e->getMessage();
         }
     }
@@ -147,38 +184,39 @@ class Modul extends Component
         $module = Module::find($id);
         if($module){
             $module->delete();
+            $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
             $this->alertRemove();
         }else{
             $this->alertNoData();
         }
     }
-    public function toggleSelectedItem($itemId)
-    {
-        if (in_array($itemId, $this->selectedItems)) {
-            $this->selectedItems = array_diff($this->selectedItems, [$itemId]);
-        } else {
-            $this->selectedItems[] = $itemId;
-        }
-    }
+    // public function toggleSelectedItem($itemId)
+    // {
+    //     if (in_array($itemId, $this->selectedItems)) {
+    //         $this->selectedItems = array_diff($this->selectedItems, [$itemId]);
+    //     } else {
+    //         $this->selectedItems[] = $itemId;
+    //     }
+    // }
 
-    public function deleteSelectedItemsConfirm()
-    {
-        $this->alertConfirm($this->selectedItems, 'Data', 'deleteSelectedItems');
-    }
-    public function deleteSelectedItems()
-    {
-        foreach ($this->selectedItems as $itemId) {
-            $item = Module::find($itemId);
-            if ($item) {
-                $item->delete();
-            }
-        }
-        $this->selectedItems = [];
-        $this->alertRemove();
-    }
+    // public function deleteSelectedItemsConfirm()
+    // {
+    //     $this->alertConfirm($this->selectedItems, 'Data', 'deleteSelectedItems');
+    // }
+    // public function deleteSelectedItems()
+    // {
+    //     foreach ($this->selectedItems as $itemId) {
+    //         $item = Module::find($itemId);
+    //         if ($item) {
+    //             $item->delete();
+    //         }
+    //     }
+    //     $this->selectedItems = [];
+    //     $this->alertRemove();
+    // }
     public function render()
     {
-        $tableData = Module::paginate(10);
-        return view('livewire.settings.modul', compact('tableData'));
+        // $tableData = Module::paginate(10);
+        return view('livewire.settings.modul');
     }
 }

@@ -11,7 +11,6 @@ class Module extends Model
     use HasFactory;
     protected $fillable = ['parrent_id','is_sidebar', 'icon', 'title', 'url', 'method', 'slug', 'child', 'sort'];
     protected $appends = ['sidebar_status'];
-
     public function getIncrementing()
     {
         return false;
@@ -26,6 +25,9 @@ class Module extends Model
         static::creating(function ($model) {
             $model->id = Str::uuid();
         });
+    }
+    public function subModule() {
+        return $this->hasMany(Module::class, 'parrent_id')->where('parrent_id', '!=', 0)->orderBy('sort', 'ASC');
     }
     public function getSidebarStatusAttribute(){
         if($this->is_sidebar == 1){

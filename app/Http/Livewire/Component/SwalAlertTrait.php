@@ -19,6 +19,14 @@ trait SwalAlertTrait
                 'text' => "please check your data!"
             ]);
     }
+    public function alertValidate()
+    {
+        $this->dispatchBrowserEvent('swal:alert', [
+                'type' => 'error',  
+                'message' => "data not valid!", 
+                'text' => "please check your form!"
+            ]);
+    }
     public function alertSuccess()
     {
         $this->dispatchBrowserEvent('swal:alert', [
