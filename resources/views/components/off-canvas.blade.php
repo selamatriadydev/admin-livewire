@@ -34,5 +34,6 @@
     <div class="offcanvas-footer">
         <button type="button" wire:click.prevent="{{ $activeOffcanvasAction }}" class="btn btn-primary">Save</button>
         <button type="button" class="btn btn-secondary" wire:click="hideOffcanvas" data-bs-dismiss="offcanvas" aria-label="Close">Close</button>
+        <div wire:loading.delay wire:target="{{ $activeOffcanvasAction }}">Processing ...</div>
     </div>
 </div>

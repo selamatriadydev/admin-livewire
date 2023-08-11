@@ -11,6 +11,13 @@ trait SwalAlertTrait
                 'text' => $text
             ]);
     }
+    public function alertSwal(string $type, string $message)
+    {
+        $this->dispatchBrowserEvent('swal:alert', [
+            'type' => $type,  
+            'message' => $message
+        ]);
+    }
     public function alertNoData()
     {
         $this->dispatchBrowserEvent('swal:alert', [

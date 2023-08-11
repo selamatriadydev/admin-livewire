@@ -29,6 +29,9 @@ class Module extends Model
     public function subModule() {
         return $this->hasMany(Module::class, 'parrent_id')->where('parrent_id', '!=', 0)->orderBy('sort', 'ASC');
     }
+    public function permisModule() {
+        return Permission::where('name', 'like', '%-'.$this->slug)->get();
+    }
     public function getSidebarStatusAttribute(){
         if($this->is_sidebar == 1){
             return 'YES';

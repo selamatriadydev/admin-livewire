@@ -2,9 +2,11 @@
 
 namespace App\Http\Livewire\Settings;
 
+use App\Http\Livewire\Component\AccordionTrait;
 use App\Http\Livewire\Component\OffCanvasTrait;
 use App\Http\Livewire\Component\SwalAlertTrait;
 use App\Models\Module;
+use App\Models\Permission;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
@@ -13,12 +15,15 @@ class Modul extends Component
 {
     use SwalAlertTrait;
     use OffCanvasTrait;
-    use WithPagination;
-    protected $paginationTheme = 'bootstrap';
+    // use WithPagination;
+    use AccordionTrait;
+    // protected $paginationTheme = 'bootstrap';
 
-    public $parrent_id,$is_sidebar,$icon,$title, $url, $method, $slug, $child,$sort,$data_id;
+    public $parrent_id,$is_sidebar,$icon,$title, $url, $method, $slug, $child,$sort,$data_id, $permisData, $permis_name, $permis_slug;
     public $actCreate= true, $actUpdate= true, $actDelete=true, $actDetail = false;
-    protected $listeners = ['deleteData', 'deleteSelectedItems'];
+    protected $listeners = ['deleteData', 'deleteSelectedItems',
+                'permissionStored' => 'handleStored',
+            ];
     public $selectedItems = [];
     public $tableHead = ['Sidebar', 'Icon', 'Title', 'child', 'Sort'];
     public $tableBody = ['sidebar_status', 'icon', 'title', 'child', 'sort'];
@@ -43,18 +48,9 @@ class Modul extends Component
     public function mount(){
         $this->formGenerate();
         $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
+        $this->permisData =  Permission::get();
         $this->parrent_id = '0';
         $this->is_sidebar = '0';
-        // $this->OffcanvasForm = [
-        //     ['title' => 'Is Sidebar', 'type' => 'option', 'model' => 'is_sidebar', 'data' => [['value' => 1, 'text' => 'YES'], ['value' => 0, 'text' => 'NO']]],
-        //     ['title' => 'Icon', 'type' => 'text', 'model' => 'icon'],
-        //     ['title' => 'Title', 'type' => 'text', 'model' => 'title'],
-        //     ['title' => 'Url', 'type' => 'text', 'model' => 'url'],
-        //     ['title' => 'Method', 'type' => 'text', 'model' => 'method'],
-        //     ['title' => 'Slug', 'type' => 'text', 'model' => 'slug', 'readonly' => 'readonly'],
-        //     ['title' => 'Child', 'type' => 'textarea', 'model' => 'child'],
-        //     ['title' => 'Sort', 'type' => 'number', 'model' => 'sort'],
-        // ];
     }
     public function formGenerate(){
         $formGenerate = [
@@ -189,6 +185,24 @@ class Modul extends Component
         }else{
             $this->alertNoData();
         }
+    }
+    public function newPermis($slug){
+        $this->permis_slug = $slug;
+        $this->OffcanvasForm = [
+            ['title' => 'Name', 'type' => 'text', 'model' => 'permis_name'],
+        ];
+        $this->activeOffcanvasAction = 'storePermission';
+        $this->opencOffcanvas();
+    }
+    public function storePermission()
+    {
+        // $validatedData = $this->validate();
+        $validatedData['name'] = $this->permis_name."-".$this->permis_slug;
+        Permission::create($validatedData);
+        $this->permis_slug = '';
+        $this->permis_name = '';
+        $this->hideOffcanvas();
+        $this->alertCreate();
     }
     // public function toggleSelectedItem($itemId)
     // {
