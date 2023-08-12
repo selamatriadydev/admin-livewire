@@ -23,7 +23,7 @@
                                     </div>
                                     <div class="mt-3 mt-md-0">
                                         @if ($actCreate)
-                                            <button type="button" wire:click="toggleOffcanvas" class="btn btn-primary ms-2" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
+                                            <button type="button" wire:click="newModul" class="btn btn-primary ms-2" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
                                                 New Data
                                             </button>
                                         @endif
@@ -78,34 +78,29 @@
                                                                         @endif
                                                                     </td>
                                                                 </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        @if ($actCreate)
-                                                            <button type="button" wire:click="newPermis('{{ $item->slug }}')" class="btn btn-primary ms-2" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
-                                                                New Sub Permis
-                                                            </button>
-                                                        @endif
-                                                        <table class="table table-bordered">
-                                                            <thead class="table-light">
                                                                 <tr>
-                                                                    <th scope="col" width="5%">#</th>
-                                                                    <th scope="col">Permission Name</th>
-                                                                    <th scope="col" width="20%">Action</th>
+                                                                    <td >#</td>
+                                                                    <td colspan="4">Permission Name</td>
+                                                                    <td>
+                                                                        @if ($actCreate)
+                                                                            <button type="button" wire:click="newPermis('{{ $item->slug }}')" class="btn btn-primary btn-sm ms-2" data-bs-toggle="tooltip" data-placement="top" title="New Permission">
+                                                                                New
+                                                                            </button>
+                                                                        @endif
+                                                                    </td>
                                                                 </tr>
-                                                            </thead>
-                                                            <tbody>
                                                                 @foreach ($item->permisModule() as $permis)
                                                                     <tr>
                                                                         <th scope="row">{{ $loop->iteration }}</th>
-                                                                        <td>{{ $permis->name }}</td>
+                                                                        <td colspan="4">{{ $permis['name'] }}</td>
                                                                         <td>
                                                                             @if ($actUpdate)
-                                                                                <button type="button" wire:click="edit('{{ $permis->id }}')" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Edit data">
+                                                                                <button type="button" wire:click="editPermission('{{ $permis['id'] }}', '{{ $item->slug }}')" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Edit data">
                                                                                     Edit
                                                                                 </button>
                                                                             @endif
                                                                             @if ($actDelete)
-                                                                                <button type="button" wire:click="deleteConfirm('{{ $permis->id }}')" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Delete data">
+                                                                                <button type="button" wire:click="deleteConfirmPermission('{{ $permis['id'] }}', '{{ $item->slug }}')" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-placement="top" title="Delete data">
                                                                                         Delete
                                                                                     </button>
                                                                             @endif
@@ -115,8 +110,8 @@
                                                             </tbody>
                                                         </table>
                                                         @if ($actCreate)
-                                                            <button type="button" wire:click="newSub('{{ $item->id }}')" class="btn btn-primary ms-2" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
-                                                                New Sub Data
+                                                            <button type="button" wire:click="newSub('{{ $item->id }}')" class="btn btn-primary ms-2" data-bs-toggle="tooltip" data-placement="top" title="New Sub Modul">
+                                                                New Sub Modul
                                                             </button>
                                                         @endif
                                                         @if ($item->subModule->count())

@@ -1,6 +1,6 @@
 <div class="offcanvas offcanvas-end {{ $showOffcanvas ? 'show' : '' }}">
     <div class="offcanvas-header">
-      <h5 id="offcanvasRightLabel">New Role</h5>
+      <h5 id="offcanvasRightLabel"> {{ $titleOffcanvasAction ?? 'New Data' }}</h5>
       <button type="button" class="btn-close text-reset" wire:click="hideOffcanvas"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -23,10 +23,17 @@
                             @case('number')
                                 <input type="number" class="form-control" placeholder="Input {{ $item['title'] }}" wire:model.lazy="{{ $item['model'] }}">
                                 @break
+                            @case('input_helper')
+                                @foreach ($item['data'] as $helper)
+                                    <span wire:click="{{ $item['change'] }}('{{ $helper }}')" class="badge bg-primary" style="cursor: pointer">{{ $helper }}</span>
+                                @endforeach
+                                @break
                             @default
                             <input type="{{ $item['type'] }}" class="form-control" {{ isset($item['readonly']) ? $item['readonly'] : '' }} placeholder="Input {{ $item['title'] }}" wire:model.lazy="{{ $item['model'] }}">
                         @endswitch
-                    @error($item['model']) <span class="text-danger error">{{ $message }}</span>@enderror
+                        @if (isset($item['model']))
+                            @error($item['model']) <span class="text-danger error">{{ $message }}</span>@enderror
+                        @endif
                 </div>
             @endforeach
         </form>

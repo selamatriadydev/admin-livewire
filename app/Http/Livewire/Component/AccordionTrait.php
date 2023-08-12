@@ -23,6 +23,7 @@ trait AccordionTrait
     public function toggleAccordionParent($accordionActive){
         if ($this->accordionActiveParent === $accordionActive) {
             $this->accordionActiveParent = null;
+            $this->accordionActiveSub = null;
         } else {
             $this->accordionActiveParent = $accordionActive;
         }

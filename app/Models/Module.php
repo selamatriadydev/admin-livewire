@@ -25,12 +25,31 @@ class Module extends Model
         static::creating(function ($model) {
             $model->id = Str::uuid();
         });
+        static::deleting(function ($model) {
+            Permission::where('name', 'like', '%-'.$model->slug)->delete();
+            $model->childModule()->delete();
+        });
+    }
+    public function scopeParentModul(){
+        return $this->where('parrent_id', 0);
+    }
+    public function scopeIsSidebar(){
+        return $this->where('is_sidebar', 1);
+    }
+    public function childModule() {
+        return $this->hasMany(Module::class, 'parrent_id');
     }
     public function subModule() {
         return $this->hasMany(Module::class, 'parrent_id')->where('parrent_id', '!=', 0)->orderBy('sort', 'ASC');
     }
     public function permisModule() {
-        return Permission::where('name', 'like', '%-'.$this->slug)->get();
+        return Permission::where('name', 'like', '%-'.$this->slug)->get()->map(function($permis){
+            $permisName = Str::replace('-'.$this->slug, '', $permis->name);
+            return [
+                'id' => $permis->id,
+                'name' => $permisName
+            ];
+        });
     }
     public function getSidebarStatusAttribute(){
         if($this->is_sidebar == 1){
