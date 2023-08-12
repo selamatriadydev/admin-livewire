@@ -28,6 +28,9 @@
                                     <span wire:click="{{ $item['change'] }}('{{ $helper }}')" class="badge bg-primary" style="cursor: pointer">{{ $helper }}</span>
                                 @endforeach
                                 @break
+                            @case('list_module')
+                                <x-checkbox-modules :modules="$item['data']" :selected="$item['model']" />
+                                @break
                             @default
                             <input type="{{ $item['type'] }}" class="form-control" {{ isset($item['readonly']) ? $item['readonly'] : '' }} placeholder="Input {{ $item['title'] }}" wire:model.lazy="{{ $item['model'] }}">
                         @endswitch
