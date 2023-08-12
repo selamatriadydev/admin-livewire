@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Livewire\Admin\Home;
-use App\Http\Livewire\Admin\Role;
+use App\Http\Livewire\Settings\Modul;
+use App\Http\Livewire\Settings\Role;
 use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Auth\Register;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', Login::class)->name('auth.login');
 Route::get('/register', Register::class)->name('auth.register');
 Route::get('/home', Home::class)->name('home');
-Route::get('/roles', Role::class)->name('admin.role');
+Route::get('/roles', Role::class)->name('app.role');
+Route::get('/modules', Modul::class)->name('app.modules');

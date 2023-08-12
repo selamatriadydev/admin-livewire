@@ -26,3 +26,4 @@
         border-top: 1px solid #dee2e6;
     }
 </style>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
