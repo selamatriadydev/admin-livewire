@@ -15,7 +15,7 @@ class Sidebar extends Component
             $this->activeSidebar = Request::segment(1);
         }
         $this->sidebarItems = auth()->user()->allMenus;
-        // dd(auth()->user()->allMenus);
+        // dd(auth()->user()->allPermissions);
     }
     public function toggleSidebar()
     {
