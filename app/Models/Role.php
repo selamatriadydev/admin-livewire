@@ -10,7 +10,7 @@ use Spatie\Permission\Traits\HasRoles as spatieRole;
 class Role extends Model
 {
     use HasFactory;
-    use spatieRole;
+    // use spatieRole;
 
     public function getIncrementing()
     {
@@ -27,6 +27,10 @@ class Role extends Model
         static::creating(function ($model) {
             $model->id = Str::uuid();
             $model->guard_name = 'web';
+        });
+        static::deleting(function ($role) {
+            $role->modules()->detach();
+            $role->permissions()->detach();
         });
     }
 

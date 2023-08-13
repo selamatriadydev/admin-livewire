@@ -12,13 +12,44 @@ class SiteHelper {
         if(!$slug) return [];
         if($permis){
             $data = [];
-            $permisData = Permission::where('name', 'like', '%-'.$slug)->pluck('name')->toArray();
-            foreach ($permisData as $value) {
-                $data[$value] = str_replace("-".$slug, '', $value);
+            $permisData = Permission::where('name', 'like', '%-'.$slug)->pluck('name', 'id')->toArray();
+            foreach ($permisData as $key=>$value) {
+                $data[$key] = str_replace("-".$slug, '', $value);
             }
             return $data;
         }
         return Permission::where('name', 'like', '%-'.$slug)->pluck('name', 'id')->toArray();
+    }
+
+    public static function moduleChedked(){
+        return Module::with('childModule')->parentModul()->orderBy('sort', 'ASC')->get()->map(function($parrent){
+            $childs = $parrent->childModule()->get()->map(function($child){
+                return [
+                    'checked' => false,
+                    'id' => $child->id,
+                    'title' => $child->title,
+                    'permissions' => self::permissionModuleChedked($child->slug),
+                ];
+            })->toArray();
+            return [
+                'checked' => false,
+                'id' => $parrent->id,
+                'title' => $parrent->title,
+                'is_parrent' => (count($parrent->childModule) > 0 || count(self::permissionModuleChedked($parrent->slug)) > 0),
+                'permissions' => self::permissionModuleChedked($parrent->slug),
+                'childs' => $childs,
+            ];
+        })->toArray();;
+    }
+    public static function permissionModuleChedked($slug){
+        if(!$slug) return [];
+        return Permission::where('name', 'like', '%-'.$slug)->get()->map(function($data){
+            return [
+                'checked' => false,
+                'id' => $data->id,
+                'name' => $data->name,
+            ];
+        })->toArray();
     }
     public static function buildTree(array $elements, $parentId = 0)
     {

@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Settings;
 use App\Helpers\SiteHelper;
 use App\Http\Livewire\Component\OffCanvasTrait;
 use App\Http\Livewire\Component\SwalAlertTrait;
+use App\Http\Livewire\Traits\TreeViewTrait;
 use App\Models\Module;
 use App\Models\Role as ModelsRole;
 use Livewire\Component;
@@ -12,12 +13,13 @@ use Livewire\WithPagination;
 
 class Role extends Component
 {
-    use SwalAlertTrait;
-    use OffCanvasTrait;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
+    use SwalAlertTrait;
+    use OffCanvasTrait;
+    use TreeViewTrait;
 
-    public $name,$role_id, $list_modules, $selectedModule, $actCreate= true, $actUpdate= true, $actDelete=true, $actDetail = false;
+    public $name,$role_id, $actCreate= true, $actUpdate= true, $actDelete=true, $actDetail = false;
     public $updateMode = false;
     public $dataAction = 'store';
     protected $listeners = ['deleteData', 'deleteSelectedItems'];
@@ -25,14 +27,6 @@ class Role extends Component
     public $tableHead = ['Nama'];
     public $tableBody = ['name'];
     
-    public function toggleSelection($nodeId)
-    {
-        if (in_array($nodeId, $this->selectedModule)) {
-            $this->selectedModule = array_diff($this->selectedModule, [$nodeId]);
-        } else {
-            $this->selectedModule[] = $nodeId;
-        }
-    }
     public function rules()
     {
         $rules = [
@@ -46,20 +40,16 @@ class Role extends Component
         return $rules;
     }
     public function mount(){
-        $this->list_modules = Module::with('childModule')->parentModul()->orderBy('sort', 'ASC')->get()->map(function($parrent){
+        $this->listModule = Module::with('childModule')->parentModul()->orderBy('sort', 'ASC')->get()->map(function($parrent){
             $childs = $parrent->childModule()->get()->map(function($child){
                 return [
                     'id' => $child->id,
-                    'method' => $child->method,
-                    'slug' => $child->slug,
                     'title' => $child->title,
                     'permissions' => SiteHelper::permissionMenu($child->slug, true),
                 ];
             })->toArray();
             return [
                 'id' => $parrent->id,
-                'method' => $parrent->method,
-                'slug' => $parrent->slug,
                 'title' => $parrent->title,
                 'is_parrent' => (count($parrent->childModule) > 0 || count(SiteHelper::permissionMenu($parrent->slug)) > 0),
                 'permissions' => SiteHelper::permissionMenu($parrent->slug, true),
@@ -68,13 +58,14 @@ class Role extends Component
         })->toArray();
         $this->OffcanvasForm = [
             ['title' => 'Name', 'type' => 'text', 'model' => 'name'],
-            ['title' => 'Module', 'type' => 'list_module', 'model' => 'selectedModule', 'data' => $this->list_modules],
+            ['title' => 'Module', 'type' => 'list_module', 'model' => 'selectedModule', 'data' => $this->listModule],
         ];
     }
 
     private function resetInputFields(){
         $this->role_id = '';
         $this->name = '';
+        $this->selectedModule = [];
     }
     public function openOffcanvas()
     {
@@ -86,7 +77,16 @@ class Role extends Component
     public function store(){
         $this->validate();
         try {
-            ModelsRole::create(['name' => $this->name]);
+            $role = ModelsRole::create(['name' => $this->name]);
+            $this->getModulData();
+            if ($this->requestDataModuleId) {
+                $role = ModelsRole::findOrFail($role->id);
+                $role->modules()->sync($this->requestDataModuleId);
+            }
+            if ($this->requestDataPermisId) {
+                $role = ModelsRole::findOrFail($role->id);
+                $role->permissions()->sync($this->requestDataPermisId);
+            }
             $this->resetInputFields();
             $this->hideOffcanvas();
             $this->alertCreate();
@@ -102,6 +102,15 @@ class Role extends Component
             $this->alertNoData();
         }else{
             $this->modeUpdate();
+            $moduleArray = $role->modules()->get()->map(function($data){
+                return $data['pivot']['module_id'];
+            })->toArray();
+            // dd($moduleArray);
+            $permisArray = $role->permissions()->get()->map(function($data){
+                return $data['pivot']['permission_id'];
+            })->toArray();
+            $this->setSelectedModule($moduleArray, $permisArray);
+            // dd($this->selectedModule);
             $this->role_id = $role->id;
             $this->name = $role->name;
         }
@@ -113,6 +122,16 @@ class Role extends Component
             $role = ModelsRole::find($this->role_id);
             if($role){
                 $role->update(['name' => $this->name]);
+                $this->getModulData();
+                // dd($this->requestDataPermisId);
+                $role->modules()->sync($this->requestDataModuleId);
+                $role->permissions()->sync($this->requestDataPermisId);
+                // if ($this->requestDataModuleId) {
+                //     $role->modules()->sync($this->requestDataModuleId);
+                // }
+                // if ($this->requestDataPermisId) {
+                //     $role->permissions()->sync($this->requestDataPermisId);
+                // }
                 $this->resetInputFields();
                 $this->hideOffcanvas();
                 $this->alertUpdate();
