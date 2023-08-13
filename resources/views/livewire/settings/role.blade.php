@@ -45,7 +45,7 @@
                                             @foreach ($tableHead as $head)
                                                 <th scope="col">{{ $head }}</th>
                                             @endforeach
-                                        <th scope="col" width="20%">Action</th>
+                                            <th scope="col" width="20%">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
