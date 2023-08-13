@@ -22,8 +22,10 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/', Login::class)->name('auth.login');
+Route::get('/', Login::class)->name('login');
 Route::get('/register', Register::class)->name('auth.register');
-Route::get('/home', Home::class)->name('home');
-Route::get('/roles', Role::class)->name('app.role');
-Route::get('/modules', Modul::class)->name('app.modules');
+Route::group(['middleware' => ['auth']], function() {
+    Route::get('/home', Home::class)->name('home');
+    Route::get('/roles', Role::class)->name('app.role');
+    Route::get('/modules', Modul::class)->name('app.modules');
+});

@@ -9,14 +9,14 @@
             <!-- Navbar nav -->
             <ul class="navbar-nav flex-column" id="sideNavbar">
                 @foreach ($sidebarItems as $item)
-                    @if ($item['is_child'])
+                    @if ($item['children'])
                         <li class="nav-item">
-                            <a class="nav-link has-arrow {{ in_array($activeSidebar,$item['method_data']) ? 'collapsed' : '' }}" href="#!" data-bs-toggle="collapse" data-bs-target="#navPages-{{ $item['method'] }}" aria-expanded="false" aria-controls="navPages-{{ $item['method'] }}">
+                            <a class="nav-link has-arrow {{ in_array($activeSidebar,$item['children_method']) ? 'collapsed' : '' }}" href="#!" data-bs-toggle="collapse" data-bs-target="#navPages-{{ $item['method'] }}" aria-expanded="false" aria-controls="navPages-{{ $item['method'] }}">
                                 <i data-feather="{{ $item['icon'] ?? 'layers' }}" class="nav-icon icon-xs me-2"></i> {{ $item['title'] }}
                             </a>
-                            <div id="navPages-{{ $item['method'] }}" class="collapse {{ in_array($activeSidebar,$item['method_data']) ? 'show' : '' }}" data-bs-parent="#sideNavbar">
+                            <div id="navPages-{{ $item['method'] }}" class="collapse {{ in_array($activeSidebar,$item['children_method']) ? 'show' : '' }}" data-bs-parent="#sideNavbar">
                                 <ul class="nav flex-column">
-                                    @foreach ($item['child_data'] as $sub)
+                                    @foreach ($item['children'] as $sub)
                                         <li class="nav-item">
                                             <a class="nav-link {{ $activeSidebar === $sub['method'] ? 'active' : '' }}" href="{{ url($sub['url']) }}">
                                                 {{ $sub['title'] }}

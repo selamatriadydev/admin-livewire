@@ -56,8 +56,8 @@ class SiteHelper {
         $branch = [];
     
         foreach ($elements as $element) {
-            if ($element['parent_id'] == $parentId) {
-                $children = buildTree($elements, $element['id']);
+            if ($element['parrent_id'] == $parentId) {
+                $children = self::buildTree($elements, $element['id']);
                 if ($children) {
                     $element['children'] = $children;
                 }

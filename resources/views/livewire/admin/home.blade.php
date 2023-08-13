@@ -1,10 +1,12 @@
 <div>
-    <div id="db-wrapper">
-        <livewire:component.sidebar />
-        <div id="page-content">
-            <livewire:component.header />
-            <!-- Container fluid -->
-            <div class="bg-primary pt-10 pb-21"></div>
+    <main id="main-wrapper" class="main-wrapper">
+        <livewire:component.header />
+         <!-- Sidebar -->
+         <livewire:component.sidebar />
+        <!-- Page Content -->
+        <div id="app-content">
+            <div class="app-content-area">
+                <div class="bg-primary pt-10 pb-21"></div>
             <div class="container-fluid mt-n22 px-6">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-12">
@@ -709,6 +711,11 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
-    </div>
+    </main>
 </div>
+@push('scripts')
+    <script>
+    </script>
+@endpush

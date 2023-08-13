@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\SiteHelper;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id'
     ];
 
     /**
@@ -64,39 +66,40 @@ class User extends Authenticatable
         ->whereHas('roles', function ($q) use ($roleId) {
             $q->where('role_id', $roleId);
         })
-        ->where('menu_parrent_id', '=', '0')
-        ->orderBy('menu_order')
+        ->parentModul()
+        ->orderBy('sort')
         ->get()
         ->map(function ($module) {
                 $children = [];
-                if($module->childMenu){
-                    $children = $module->childMenu->map(function ($child) {
+                if($module->childModule){
+                    $children = $module->childModule->map(function ($child) {
                         return [
-                            'id' => $child->menu_id,
-                            'parent_id' => $child->menu_parrent_id,
-                            'module_name' => $child->menu_title,
-                            'module_link' => $child->menu_uri,
-                            'module_icon' => $child->menu_icon,
-                            'module_method' => $child->menu_method,
-                            'module_sort' => $child->menu_order,
-                            'children_method' => explode(',', $child->menu_child),
+                            'id' => $child->id,
+                            'parrent_id' => $child->parrent_id,
+                            'title' => $child->title,
+                            'url' => $child->url,
+                            'icon' => $child->icon,
+                            'method' => $child->method,
+                            'sort' => $child->sort,
+                            'children_method' => explode(',', $child->child),
                         ];
                     })->toArray();
                 }
                 return [
-                    'id' => $module->menu_id,
-                    'parent_id' => $module->menu_parrent_id,
-                    'module_name' => $module->menu_title,
-                    'module_link' => $module->menu_uri,
-                    'module_icon' => $module->menu_icon,
-                    'module_method' => $module->menu_method,
-                    'module_sort' => $module->menu_order,
-                    'children_method' => explode(',', $module->menu_child),
+                    'id' => $module->id,
+                    'parrent_id' => $module->parrent_id,
+                    'title' => $module->title,
+                    'url' => $module->url,
+                    'icon' => $module->icon,
+                    'method' => $module->method,
+                    'sort' => $module->sort,
+                    'children_method' => explode(',', $module->child),
                     'children' => $children,
                 ];
             })
             ->toArray();
-        return buildTree($parents);
+        return SiteHelper::buildTree($parents);
+        // return $parents;
     }
     public function canAccess($permission)
     {
