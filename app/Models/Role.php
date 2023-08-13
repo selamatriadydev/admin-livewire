@@ -5,12 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Spatie\Permission\Traits\HasRoles as spatieRole;
 
 class Role extends Model
 {
     use HasFactory;
-    // use spatieRole;
 
     public function getIncrementing()
     {
