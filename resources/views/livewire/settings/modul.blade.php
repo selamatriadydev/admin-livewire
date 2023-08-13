@@ -99,9 +99,9 @@
                                                     New Sub Modul
                                                 </button>
                                             @endif
-                                            @if ($item->subModule->count())
+                                            @if ($item->childModule->count())
                                                 <div class="accordion" id="parent-{{ $item->method }}" key='sub-{{ $item->id  }}'>
-                                                    @foreach ($item->subModule()->get() as $sub)
+                                                    @foreach ($item->childModule()->get() as $sub)
                                                         <x-items-accordion title="{{ $sub->title }}" itemId="{{ $sub->method }}" toggleAccordion="toggleAccordionSub" accordionActive="{{ $accordionActiveSub }}" parentId="parent-{{ $item->method }}">
                                                             <table class="table table-bordered">
                                                                 <thead class="table-light">

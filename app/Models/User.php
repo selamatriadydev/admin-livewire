@@ -22,7 +22,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id'
+        'role_id',
+        'status_active',
+        'last_seen_at'
     ];
 
     /**
@@ -45,6 +47,16 @@ class User extends Authenticatable
     ];
     protected $appends = ['allPermissions', 'allMenus']; 
 
+    public function roles(){
+        return $this->hasOne(Role::class, 'id', 'role_id');
+    }
+
+    public function getRoleNameAttribute(){
+        return $this->roles->name ?? '';
+    }
+    public function getOnlineAttribute(){
+        return $this->last_seen_at >= now()->subMinutes(5) ? 'Ya' : 'Tidak';
+    }
     public function getAllpermissionsAttribute()
     {  
         $roles = Role::all(); // Fetching all Role models from the database

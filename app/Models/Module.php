@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Module extends Model
+class Module extends Model 
 {
     use HasFactory;
     protected $fillable = ['parrent_id','is_sidebar', 'icon', 'title', 'url', 'method', 'slug', 'child', 'sort'];
@@ -44,7 +44,7 @@ class Module extends Model
     }
     
     public function scopeParentModul($query){
-        return $query->where('parrent_id', 0);
+        return $query->where('parrent_id', '0');
     }
     public function scopeIsSidebar($query){
         return $query->where('is_sidebar', 1);

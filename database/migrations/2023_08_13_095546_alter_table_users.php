@@ -13,9 +13,11 @@ class AlterTableUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) { // Foreign key constraint
             $table->uuid('role_id')->nullable()->after('password'); // Foreign key for role
-            $table->foreign('role_id')->references('id')->on('roles'); // Foreign key constraint
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade')->onDelete('set null');
+            $table->string('status_active')->nullable()->after('role_id');
+            $table->timestamp('last_seen_at')->nullable()->after('role_id');
         });
     }
 
@@ -28,6 +30,8 @@ class AlterTableUsers extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('role_id');
+            $table->dropColumn('status_active');
+            $table->dropColumn('last_seen_at');
         });
     }
 }

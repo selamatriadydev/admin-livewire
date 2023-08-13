@@ -12,6 +12,7 @@
                         @switch($item['type'])
                             @case('option')
                                     <select wire:model.lazy="{{ $item['model'] }}" class="form-control">
+                                        <option value="">Pilih Satu</option>
                                         @foreach ($item['data'] as $opt)
                                             <option value="{{ $opt['value'] }}"> {{ $opt['text'] }}</option>
                                         @endforeach

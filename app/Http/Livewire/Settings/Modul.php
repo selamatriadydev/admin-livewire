@@ -60,7 +60,7 @@ class Modul extends Component
     }
     public function mount(){
         // $this->formGenerate();
-        $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
+        $this->tableData = Module::parentModul()->orderBy('sort', 'ASC')->get();
         $this->permisData =  Permission::get();
         $this->parrent_id = '0';
         $this->is_sidebar = '0';

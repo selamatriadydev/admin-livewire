@@ -49,6 +49,11 @@
                                                 New Data
                                             </button>
                                         @endif
+                                        @if (count($selectedItems))
+                                            <button type="button" wire:click="deleteSelectedItemsConfirm" class="btn btn-danger ms-2" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
+                                                Delete Selected {{ count($selectedItems) }} Data
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                                 <!-- table  -->
@@ -113,7 +118,9 @@
                 </div>
             </div>
         </div>
+        @include('components.off-canvas')
     </main>
+    <livewire:component.swal-alert />
 </div>
 @push('scripts')
     <script>

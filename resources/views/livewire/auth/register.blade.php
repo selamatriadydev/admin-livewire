@@ -60,7 +60,7 @@
     
                     <div class="d-md-flex justify-content-between mt-4">
                       <div class="mb-2 mb-md-0">
-                        <a href="{{ route('auth.login') }}" class="fs-5">Create An
+                        <a href="{{ route('login') }}" class="fs-5">Create An
                             Account </a>
                       </div>
                       <div>
