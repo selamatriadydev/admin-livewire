@@ -23,11 +23,12 @@ class Role extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            // if ( ! $model->getKey()) {
-            //     $model->{$model->getKeyName()} = (string) Str::uuid();
-            // }
             $model->id = Str::uuid();
             $model->guard_name = 'web';
+        });
+        static::deleting(function ($role) {
+            $role->modules()->detach();
+            $role->permissions()->detach();
         });
     }
 
@@ -35,4 +36,13 @@ class Role extends Model
     // protected $guard = ['guard_name'];
     protected $hidden = ['guard_name'];
 
+    public function modules()
+    {
+    	return $this->belongsToMany(Module::class, 'role_has_module', 'role_id', 'module_id');
+    }
+
+    public function permissions()
+    {
+    	return $this->belongsToMany(Permission::class, 'role_has_permissions', 'role_id', 'permission_id');
+    }
 }

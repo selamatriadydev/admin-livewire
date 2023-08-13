@@ -30,17 +30,24 @@ class Module extends Model
             $model->childModule()->delete();
         });
     }
-    public function scopeParentModul(){
-        return $this->where('parrent_id', 0);
-    }
-    public function scopeIsSidebar(){
-        return $this->where('is_sidebar', 1);
-    }
+
     public function childModule() {
         return $this->hasMany(Module::class, 'parrent_id');
     }
     public function subModule() {
         return $this->hasMany(Module::class, 'parrent_id')->where('parrent_id', '!=', 0)->orderBy('sort', 'ASC');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_has_module', 'module_id', 'role_id');
+    }
+    
+    public function scopeParentModul($query){
+        return $query->where('parrent_id', 0);
+    }
+    public function scopeIsSidebar($query){
+        return $query->where('is_sidebar', 1);
     }
     public function permisModule() {
         return Permission::where('name', 'like', '%-'.$this->slug)->get()->map(function($permis){

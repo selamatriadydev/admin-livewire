@@ -33,8 +33,6 @@
                                         Delete Selected {{ count($selectedItems) }} Data
                                     </button>
                                 @endif
-                                {{-- <a href="#!" class="btn btn-outline-white ms-2">Import</a>
-                                <a href="#!" class="btn btn-outline-white ms-2">Export</a> --}}
                             </div>
                         </div>
                         <div class="card-body">
@@ -47,7 +45,7 @@
                                             @foreach ($tableHead as $head)
                                                 <th scope="col">{{ $head }}</th>
                                             @endforeach
-                                        <th scope="col" width="20%">Action</th>
+                                            <th scope="col" width="20%">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -97,44 +95,6 @@
             </div>
         </div>
         @include('components.off-canvas')
-        {{-- <div class="offcanvas offcanvas-end {{ $showOffcanvas ? 'show' : '' }}">
-            <div class="offcanvas-header">
-              <h5 id="offcanvasRightLabel">New Role</h5>
-              <button type="button" class="btn-close text-reset" wire:click="hideOffcanvas"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <form >
-                    <!-- Input -->
-                    @foreach ($OffcanvasForm as $item)
-                        <div class="mb-3">
-                            <label class="form-label" for="textInput">{{ $item['title'] }}</label>
-                                @switch($item['type'])
-                                    @case('option')
-                                            <select wire:model.lazy="{{ $item['model'] }}" class="form-control">
-                                                @foreach ($item['data'] as $opt)
-                                                    <option value="{{ $opt['value'] }}"> {{ $opt['text'] }}</option>
-                                                @endforeach
-                                            </select>
-                                        @break
-                                    @case('textarea')
-                                        <textarea wire:model.lazy="{{ $item['model'] }}" class="form-control"></textarea>
-                                        @break
-                                    @case('number')
-                                        <input type="number" class="form-control" placeholder="Input {{ $item['title'] }}" wire:model.lazy="{{ $item['model'] }}">
-                                        @break
-                                    @default
-                                    <input type="{{ $item['type'] }}" class="form-control" {{ isset($item['readonly']) ? $item['readonly'] : '' }} placeholder="Input {{ $item['title'] }}" wire:model.lazy="{{ $item['model'] }}">
-                                @endswitch
-                            @error($item['model']) <span class="text-danger error">{{ $message }}</span>@enderror
-                        </div>
-                    @endforeach
-                </form>
-            </div>
-            <div class="offcanvas-footer">
-                <button type="button" wire:click.prevent="{{ $activeOffcanvasAction }}" class="btn btn-primary">Save</button>
-                <button type="button" class="btn btn-secondary" wire:click="hideOffcanvas" data-bs-dismiss="offcanvas" aria-label="Close">Close</button>
-            </div>
-        </div> --}}
     </main>
     <livewire:component.swal-alert />
 </div>
