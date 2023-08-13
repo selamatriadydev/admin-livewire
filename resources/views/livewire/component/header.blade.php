@@ -116,8 +116,8 @@
               
               
                         <div class="lh-1 ">
-                          <h5 class="mb-1"> John E. Grainger</h5>
-                          <a href="#!" class="text-inherit fs-6">View my profile</a>
+                          <h5 class="mb-1"> {{ $name_user }}</h5>
+                          <a href="#!" class="text-inherit fs-6">{{ $role_user }}</a>
                         </div>
                         <div class=" dropdown-divider mt-3 mb-2"></div>
                       </div>
