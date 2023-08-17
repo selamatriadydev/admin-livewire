@@ -29,7 +29,7 @@ class LogManagement extends Component
         }else{
             $this->modeDetail();
             $event = $log->event ." ".$log->keterangan;
-            $user = $log->user->name;
+            $user = $log->user->name ?? 'guest';
             $created = $log->created_at->format('d M Y');
             $ip = $log->ip_address;
             $old_value = json_encode($log->old_values);
