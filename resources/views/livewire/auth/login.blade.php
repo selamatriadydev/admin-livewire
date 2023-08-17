@@ -61,4 +61,5 @@
           </div>
         </div>
       </div>
+      <livewire:component.swal-alert />
 </div>

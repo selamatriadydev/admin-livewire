@@ -72,9 +72,12 @@ class UsersManagement extends Component
             'email' => $this->email,
             'status_active' => $this->status_active ?? 1,
         ];
-        if ($this->activeOffcanvasAction === 'update' && $this->password !="") {
-            $data['password'] =  bcrypt($this->password);
-        }else{
+        if ($this->activeOffcanvasAction === 'update') {
+            if($this->password !=""){
+                $data['password'] =  bcrypt($this->password);
+            }
+        }
+        if ($this->activeOffcanvasAction === 'store') {
             $data['password'] =  bcrypt($this->password);
         }
         return $data;
