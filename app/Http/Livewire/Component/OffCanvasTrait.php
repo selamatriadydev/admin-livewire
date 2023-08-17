@@ -7,6 +7,7 @@ trait OffCanvasTrait
     public $activeOffcanvasAction = 'store';
     public $titleOffcanvasAction = 'New Data';
     public $OffcanvasForm = [];
+    public $OffcanvasDetail = [];
     public $showOffcanvas = false;
 
     public function toggleOffcanvas()
@@ -42,6 +43,12 @@ trait OffCanvasTrait
     {
         $this->titleOffcanvasAction = 'Update Data';
         $this->activeOffcanvasAction='update';
+        $this->showOffcanvas = true;
+    }
+    public function modeDetail()
+    {
+        $this->titleOffcanvasAction = 'Detail Data';
+        $this->activeOffcanvasAction='detail';
         $this->showOffcanvas = true;
     }
     public function hideOffcanvas()

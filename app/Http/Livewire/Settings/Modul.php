@@ -60,7 +60,7 @@ class Modul extends Component
     }
     public function mount(){
         // $this->formGenerate();
-        $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
+        $this->tableData = Module::parentModul()->orderBy('sort', 'ASC')->get();
         $this->permisData =  Permission::get();
         $this->parrent_id = '0';
         $this->is_sidebar = '0';
@@ -128,7 +128,7 @@ class Modul extends Component
             $this->resetInputFields();
             $this->hideOffcanvas();
             $this->alertCreate();
-            $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
+            $this->tableData =  Module::parentModul()->orderBy('sort', 'ASC')->get();
         } catch (\Exception $e) {
             $this->alertValidate();
             // return $this->requestData();
@@ -175,7 +175,7 @@ class Modul extends Component
                 $dataUpdate = $this->requestData();
                 $role->update($dataUpdate);
                 $this->alertUpdate();
-                $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
+                $this->tableData =  Module::parentModul()->orderBy('sort', 'ASC')->get();
             }else{
                 $this->alertNoData();
             }
@@ -200,7 +200,7 @@ class Modul extends Component
         $module = Module::find($id);
         if($module){
             $module->delete();
-            $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
+            $this->tableData =  Module::parentModul()->orderBy('sort', 'ASC')->get();
             $this->alertRemove();
         }else{
             $this->alertNoData();
@@ -272,7 +272,7 @@ class Modul extends Component
                     $this->permis_slug = '';
                     $this->permis_name = '';
                     $this->alertUpdate();
-                    $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
+                    $this->tableData =  Module::parentModul()->orderBy('sort', 'ASC')->get();
                 }else{
                     $this->alertNoData();
                 }
@@ -296,7 +296,7 @@ class Modul extends Component
         $module = Permission::find($id);
         if($module){
             $module->delete();
-            $this->tableData = Module::where('parrent_id', 0)->orderBy('sort', 'ASC')->get();
+            $this->tableData =  Module::parentModul()->orderBy('sort', 'ASC')->get();
             $this->alertRemove();
         }else{
             $this->alertNoData();

@@ -90,10 +90,11 @@ class Role extends Component
             $this->resetInputFields();
             $this->hideOffcanvas();
             $this->alertCreate();
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             $this->alertNoData();
             $this->resetInputFields();
             $this->hideOffcanvas();
+            dd($e->getMessage());
         }
     }
     public function edit($id){

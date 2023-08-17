@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Support\Arr;
 
-class User extends Authenticatable
+class User extends Authenticatable implements Auditable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use \OwenIt\Auditing\Auditable;
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +25,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id'
+        'role_id',
+        'status_active',
+        'last_seen_at'
+    ];
+    protected $auditStrict = true;
+    protected $auditInclude = [
+        'name',
+        'email',
     ];
 
     /**
@@ -45,6 +55,23 @@ class User extends Authenticatable
     ];
     protected $appends = ['allPermissions', 'allMenus']; 
 
+    public function transformAudit(array $data): array
+    {
+        Arr::set($data, 'keterangan',  'User');
+
+        return $data;
+    }
+
+    public function roles(){
+        return $this->hasOne(Role::class, 'id', 'role_id');
+    }
+
+    public function getRoleNameAttribute(){
+        return $this->roles->name ?? '';
+    }
+    public function getOnlineAttribute(){
+        return $this->last_seen_at >= now()->subMinutes(5) ? 'Ya' : 'Tidak';
+    }
     public function getAllpermissionsAttribute()
     {  
         $roles = Role::all(); // Fetching all Role models from the database

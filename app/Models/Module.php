@@ -5,12 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Support\Arr;
 
-class Module extends Model
+class Module extends Model implements Auditable
 {
     use HasFactory;
+    use \OwenIt\Auditing\Auditable;
     protected $fillable = ['parrent_id','is_sidebar', 'icon', 'title', 'url', 'method', 'slug', 'child', 'sort'];
     protected $appends = ['sidebar_status'];
+
+    protected $auditStrict = true;
+    protected $auditInclude = ['parrent_id','is_sidebar', 'icon', 'title', 'child', 'sort'];
+
     public function getIncrementing()
     {
         return false;
@@ -31,6 +38,14 @@ class Module extends Model
         });
     }
 
+
+    public function transformAudit(array $data): array
+    {
+        Arr::set($data, 'keterangan',  'Modul');
+
+        return $data;
+    }
+
     public function childModule() {
         return $this->hasMany(Module::class, 'parrent_id');
     }
@@ -44,7 +59,7 @@ class Module extends Model
     }
     
     public function scopeParentModul($query){
-        return $query->where('parrent_id', 0);
+        return $query->where('parrent_id', '0');
     }
     public function scopeIsSidebar($query){
         return $query->where('is_sidebar', 1);

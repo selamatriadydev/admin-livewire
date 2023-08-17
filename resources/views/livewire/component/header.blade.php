@@ -7,7 +7,7 @@
                 <a class="navbar-brand d-block d-md-none" href="../index.html">
                     <img src="../assets/images/brand/logo/logo-2.svg" alt="Image">
                 </a>
-                <a id="nav-toggle" href="#!" class="ms-auto ms-md-0 me-0 me-lg-3 ">
+                <a id="nav-toggle" href="#!" class="ms-auto ms-md-0 me-0 me-lg-3 " wire:click="toggledSidebar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-text-indent-left text-muted" viewBox="0 0 16 16">
                     <path d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm.646 2.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L4.293 8 2.646 6.354a.5.5 0 0 1 0-.708zM7 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"></path>
                 </svg></a>
@@ -116,8 +116,8 @@
               
               
                         <div class="lh-1 ">
-                          <h5 class="mb-1"> John E. Grainger</h5>
-                          <a href="#!" class="text-inherit fs-6">View my profile</a>
+                          <h5 class="mb-1"> {{ $name_user }}</h5>
+                          <a href="#!" class="text-inherit fs-6">{{ $role_user }}</a>
                         </div>
                         <div class=" dropdown-divider mt-3 mb-2"></div>
                       </div>
@@ -146,7 +146,7 @@
                           </a>
                         </li>
                         <li>
-                          <a class="dropdown-item" href="../index.html">
+                          <a class="dropdown-item" href="#" wire:click="logout">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-power me-2 icon-xxs dropdown-item-icon"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>Sign Out
                           </a>
                         </li>

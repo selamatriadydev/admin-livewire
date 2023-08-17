@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Support\Arr;
 
-class Role extends Model
+class Role extends Model implements Auditable
 {
     use HasFactory;
+    use \OwenIt\Auditing\Auditable;
 
     public function getIncrementing()
     {
@@ -35,7 +38,14 @@ class Role extends Model
     protected $fillable = ['name'];
     // protected $guard = ['guard_name'];
     protected $hidden = ['guard_name'];
+    protected $auditStrict = true;
+    protected $auditInclude = ['name'];
 
+    public function transformAudit(array $data): array
+    {
+        Arr::set($data, 'keterangan',  'Role');
+        return $data;
+    }
     public function modules()
     {
     	return $this->belongsToMany(Module::class, 'role_has_module', 'role_id', 'module_id');

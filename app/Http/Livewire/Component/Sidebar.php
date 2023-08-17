@@ -8,8 +8,9 @@ use Livewire\Component;
 class Sidebar extends Component
 {
     public $sidebarItems;
-    public $isExpanded = false;
+    public $sidebarVisible = false;
     public $activeSidebar ='dashboard';
+    protected $listeners = ['sidebarVisibleChanged' => 'updateSidebarVisibility'];
     public function mount(){
         if(Request::segment(1)){
             $this->activeSidebar = Request::segment(1);
@@ -17,9 +18,9 @@ class Sidebar extends Component
         $this->sidebarItems = auth()->user()->allMenus;
         // dd(auth()->user()->allPermissions);
     }
-    public function toggleSidebar()
+    public function updateSidebarVisibility($visible)
     {
-        $this->isExpanded = !$this->isExpanded;
+        $this->sidebarVisible = $visible;
     }
     public function render()
     {
