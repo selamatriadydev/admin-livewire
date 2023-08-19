@@ -103,8 +103,5 @@
 </div>
 @push('scripts')
     <script>
-        document.addEventListener('livewire:load', function () {
-            $('[data-bs-toggle="tooltip"]').tooltip();
-        });
     </script>
 @endpush

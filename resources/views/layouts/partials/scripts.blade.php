@@ -11,6 +11,7 @@
 
 <!-- Theme JS -->
 <!-- build:js @@webRoot/assets/js/theme.min.js -->
+<script src="{{ asset('dash-ui/assets/js/theme.min.js') }}"></script>
 <script src="{{ asset('dash-ui/assets/js/main.js') }}"></script>
 <script src="{{ asset('dash-ui/assets/js/feather.js') }}"></script>
 <script src="{{ asset('dash-ui/assets/js/sidebarMenu.js') }}"></script>

@@ -18,7 +18,7 @@
 <!-- Theme CSS -->
 <!-- build:css @@webRoot/assets/css/theme.min.css -->
 {{-- <link rel="stylesheet" href="{{ asset('dash-ui/assets/css/theme.css') }}"> --}}
-<link rel="stylesheet" href="{{ asset('dash-ui/assets/css/theme.min.css') }}">
+<link rel="stylesheet" href="{{ asset('dash-ui/assets/css/theme.min.css') }}?v=1">
 <!-- endbuild -->
 <style>
     .offcanvas-footer{
