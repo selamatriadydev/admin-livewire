@@ -15,9 +15,13 @@ class Login extends Component
     public $password;
 
     protected $rules = [
-        'email' => 'required',
-        'password' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|min:5|max:20',
     ];
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
     public function login(){
         $this->validate();
         try {
