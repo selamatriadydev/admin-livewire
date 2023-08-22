@@ -101,11 +101,11 @@
                             <i class="me-2 icon-xxs dropdown-item-icon" data-feather="user"></i> Profile
                           </a>
                         </li>
-                        <li>
+                        {{-- <li>
                           <a class="dropdown-item" href="#!">
                             <i class="me-2 icon-xxs dropdown-item-icon" data-feather="activity"></i> Log
                           </a>
-                        </li>
+                        </li> --}}
                         {{-- <li>
                           <a class="dropdown-item d-flex align-items-center" href="#!">
                             <i class="me-2 icon-xxs dropdown-item-icon" data-feather="settings"></i>Settings
