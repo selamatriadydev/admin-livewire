@@ -17,7 +17,6 @@
         <!-- Page Content -->
         <div id="app-content">
             <div class="app-content-area">
-                <div class="bg-primary pt-10 pb-21"></div>
                 {{ $slot }}
             </div>
         </div>

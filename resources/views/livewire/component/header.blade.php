@@ -97,7 +97,7 @@
                       </div>
                       <ul class="list-unstyled">
                         <li>
-                          <a class="dropdown-item d-flex align-items-center" href="#!">
+                          <a class="dropdown-item d-flex align-items-center" href="{{ route('app.user-profile') }}" >
                             <i class="me-2 icon-xxs dropdown-item-icon" data-feather="user"></i> Profile
                           </a>
                         </li>
@@ -106,13 +106,11 @@
                             <i class="me-2 icon-xxs dropdown-item-icon" data-feather="activity"></i> Log
                           </a>
                         </li>
-              
-              
-                        <li>
+                        {{-- <li>
                           <a class="dropdown-item d-flex align-items-center" href="#!">
                             <i class="me-2 icon-xxs dropdown-item-icon" data-feather="settings"></i>Settings
                           </a>
-                        </li>
+                        </li> --}}
                         <li>
                           <a class="dropdown-item" href="#" wire:click="logout">
                             <i class="me-2 icon-xxs dropdown-item-icon" data-feather="power"></i>Sign Out
