@@ -62,7 +62,12 @@
                             <table class="table text-nowrap mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" width="6%">Check</th>
+                                        <th scope="col" width="6%">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" wire:model="checkAll" id="checkAll">
+                                                <label class="form-check-label" for="checkAll"></label>
+                                            </div>
+                                        </th>
                                         <th scope="col" width="5%">#</th>
                                         @foreach ($tableHead as $head)
                                             <th scope="col">{{ $head }}</th>
@@ -75,7 +80,8 @@
                                         <tr>
                                             <td>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" wire:model="selectedItems" value="{{ $item->id }}">
+                                                    <input class="form-check-input" type="checkbox" wire:model="selectedItems.{{ $item->id }}" id="checkbox{{ $item->id }}" wire:click="toggleCheckbox('{{ $item->id }}')">
+                                                    <label class="form-check-label" for="checkbox{{ $item->id }}"></label>
                                                 </div>
                                             </td>
                                             <th scope="row">{{ $loop->iteration }}</th>

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Settings;
 
 use App\Http\Livewire\Component\OffCanvasTrait;
 use App\Http\Livewire\Component\SwalAlertTrait;
+use App\Http\Livewire\Traits\CheckboxManagerTrait;
 use App\Models\Role;
 use App\Models\User; 
 use Livewire\Component;
@@ -15,12 +16,13 @@ class UsersManagement extends Component
     protected $paginationTheme = 'bootstrap';
     use OffCanvasTrait;
     use SwalAlertTrait;
+    use CheckboxManagerTrait;
 
     public $user_now, $roles;
     public $actCreate= true, $actUpdate= true, $actDelete=true, $actDetail = false;
     public $name, $email, $password, $password_confirmation, $role_id, $status_active, $data_id;
     protected $listeners = ['deleteData','deleteSelectedItems'];
-    public $selectedItems = [];
+    // public $selectedItems = [];
     public $tableHead = ['Nama', 'Email', 'Role', 'Online'];
     public $tableBody = ['name', 'email', 'role_name', 'online'];
 
@@ -36,6 +38,7 @@ class UsersManagement extends Component
             ['title' => 'Password Confirm', 'type' => 'password', 'model' => 'password_confirmation'], 
             ['title' => 'Role', 'type' => 'option', 'model' => 'role_id', 'data' => $this->roles], 
         ];
+        $this->checkboxes = User::paginate(10)->pluck('id')->toArray();
     }
     public function rules()
     {
@@ -150,14 +153,14 @@ class UsersManagement extends Component
             $this->alertNoData();
         }
     }
-    public function toggleSelectedItem($itemId)
-    {
-        if (in_array($itemId, $this->selectedItems)) {
-            $this->selectedItems = array_diff($this->selectedItems, [$itemId]);
-        } else {
-            $this->selectedItems[] = $itemId;
-        }
-    }
+    // public function toggleSelectedItem($itemId)
+    // {
+    //     if (in_array($itemId, $this->selectedItems)) {
+    //         $this->selectedItems = array_diff($this->selectedItems, [$itemId]);
+    //     } else {
+    //         $this->selectedItems[] = $itemId;
+    //     }
+    // }
 
     public function deleteSelectedItemsConfirm()
     {
