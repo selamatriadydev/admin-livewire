@@ -18,35 +18,37 @@ class UsersManagement extends Component
     use SwalAlertTrait;
     use CheckboxManagerTrait;
 
-    public $user_now, $roles;
+    public $count_bulan_ini = 0, $count_all = 0, $count_active = 0, $count_nonactive =0;
     public $actCreate= true, $actUpdate= true, $actDelete=true, $actDetail = false;
     public $name, $email, $password, $password_confirmation, $role_id, $status_active, $data_id;
     protected $listeners = ['deleteData','deleteSelectedItems'];
     // public $selectedItems = [];
-    public $tableHead = ['Nama', 'Email', 'Role', 'Online'];
-    public $tableBody = ['name', 'email', 'role_name', 'online'];
+    public $tableHead = ['Nama', 'Email', 'Role','Status Active', 'Online'];
+    public $tableBody = ['name', 'email', 'role_name', 'status', 'online'];
     //search
     public $filterName = "", $filterStatus ="";
+    public $roles, $statusUser = [['value' => '1', 'text' => 'Active'], ['value' => '0', 'text' => 'Non Active']];
 
     public function mount(){
         $this->roles = Role::get()->map(function($data){
             return ['value' => $data->id, 'text' => $data->name];
         })->toArray();
-        $this->user_now = User::whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->count();
+        $this->count_bulan_ini = User::bulanIni()->count();
+        $this->count_all = User::count();
+        $this->count_active = User::statusActive()->count();
+        $this->count_nonactive = User::statusNonActive()->count();
         $this->OffcanvasForm = [
             ['title' => 'Name', 'type' => 'text', 'model' => 'name'], 
             ['title' => 'Email', 'type' => 'email', 'model' => 'email'], 
             ['title' => 'Password', 'type' => 'password', 'model' => 'password'], 
             ['title' => 'Password Confirm', 'type' => 'password', 'model' => 'password_confirmation'], 
             ['title' => 'Role', 'type' => 'option', 'model' => 'role_id', 'data' => $this->roles], 
+            ['title' => 'Status', 'type' => 'option', 'model' => 'status_active', 'data' => $this->statusUser], 
         ];
         $filterName = $this->filterName;
         $this->checkboxes = User::when($filterName, function($q) use ($filterName){
             $q->where('name', 'like', '%'.$filterName.'%');
         })->paginate(10)->pluck('id')->toArray();
-    }
-    public function search(){
-
     }
     public function rules()
     {
@@ -74,14 +76,14 @@ class UsersManagement extends Component
         $this->email = '';
         $this->password = '';
         $this->password_confirmation = '';
-        $this->status_active = '';
+        $this->status_active = '0';
     }
     private function requestInputFields(){
         $data = [
             'role_id' => $this->role_id ?? null,
             'name' => $this->name,
             'email' => $this->email,
-            'status_active' => $this->status_active ?? 1,
+            'status_active' => $this->status_active ?? 0,
         ];
         if ($this->activeOffcanvasAction === 'update') {
             if($this->password !=""){
@@ -119,6 +121,8 @@ class UsersManagement extends Component
             $this->role_id = $user->role_id;
             $this->name = $user->name;
             $this->email = $user->email;
+            $this->password = '';
+            $this->password_confirmation = '';
             $this->status_active = $user->status_active;
         }
     }
@@ -180,8 +184,15 @@ class UsersManagement extends Component
     public function render()
     {
         $filterName = $this->filterName;
+        $filterStatus = $this->filterStatus == '0' ? 'nonactive' : $this->filterStatus;
         $users = User::when($filterName, function($q) use ($filterName){
             $q->where('name', 'like', '%'.$filterName.'%');
+        })->when($filterStatus, function($q) use ($filterStatus){
+            if($filterStatus == 'nonactive'){
+                $q->where('status_active', '0');
+            }else{
+                $q->where('status_active', 1);
+            }
         })->paginate(10);
         return view('livewire.settings.users-management', compact('users'));
     }

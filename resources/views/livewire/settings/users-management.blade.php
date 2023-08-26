@@ -21,10 +21,10 @@
                     </div>
                 </div>
             </div>
-            <x-box-card title="Ditambahkan Bulan ini" total="{{ $user_now }}"/>
-            <x-box-card title="Jumlah online" total="8"/>
-            <x-box-card title="Jumlah aktif" total="8"/>
-            <x-box-card title="Jumlah tidak aktif" total="8"/>
+            <x-box-card title="Jumlah Semua" total="{{ $count_all }}"/>
+            <x-box-card title="Ditambahkan Bulan ini" total="{{ $count_bulan_ini }}"/>
+            <x-box-card title="Jumlah aktif" total="{{ $count_active }}"/>
+            <x-box-card title="Jumlah tidak aktif" total="{{ $count_nonactive }}"/>
         </div>
         <!-- row  -->
         <div class="row mt-6">
@@ -41,8 +41,9 @@
                                 <label class="form-label me-2 mb-0">Status</label>
                                 <select class="form-select" wire:model="filterStatus" aria-label="Default select example">
                                     <option value="">All</option>
-                                    <option value="1">Offline</option>
-                                    <option value="2">Online</option>
+                                    @foreach ($statusUser as $val)
+                                        <option value="{{ $val['value'] }}">{{ $val['text'] }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
