@@ -25,6 +25,8 @@ class UsersManagement extends Component
     // public $selectedItems = [];
     public $tableHead = ['Nama', 'Email', 'Role', 'Online'];
     public $tableBody = ['name', 'email', 'role_name', 'online'];
+    //search
+    public $filterName = "", $filterStatus ="";
 
     public function mount(){
         $this->roles = Role::get()->map(function($data){
@@ -38,7 +40,13 @@ class UsersManagement extends Component
             ['title' => 'Password Confirm', 'type' => 'password', 'model' => 'password_confirmation'], 
             ['title' => 'Role', 'type' => 'option', 'model' => 'role_id', 'data' => $this->roles], 
         ];
-        $this->checkboxes = User::paginate(10)->pluck('id')->toArray();
+        $filterName = $this->filterName;
+        $this->checkboxes = User::when($filterName, function($q) use ($filterName){
+            $q->where('name', 'like', '%'.$filterName.'%');
+        })->paginate(10)->pluck('id')->toArray();
+    }
+    public function search(){
+
     }
     public function rules()
     {
@@ -153,15 +161,6 @@ class UsersManagement extends Component
             $this->alertNoData();
         }
     }
-    // public function toggleSelectedItem($itemId)
-    // {
-    //     if (in_array($itemId, $this->selectedItems)) {
-    //         $this->selectedItems = array_diff($this->selectedItems, [$itemId]);
-    //     } else {
-    //         $this->selectedItems[] = $itemId;
-    //     }
-    // }
-
     public function deleteSelectedItemsConfirm()
     {
         $this->alertConfirm($this->selectedItems, 'Data', 'deleteSelectedItems');
@@ -180,7 +179,10 @@ class UsersManagement extends Component
     }
     public function render()
     {
-        $users = User::paginate(10);
+        $filterName = $this->filterName;
+        $users = User::when($filterName, function($q) use ($filterName){
+            $q->where('name', 'like', '%'.$filterName.'%');
+        })->paginate(10);
         return view('livewire.settings.users-management', compact('users'));
     }
 }

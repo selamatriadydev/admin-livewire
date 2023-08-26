@@ -35,12 +35,12 @@
                     <div class="card-header">
                         <div class="row">
                             <div class=" col-lg-3 col-md-6">
-                                <input type="search" class="form-control " placeholder="Search Files...">
+                                <input type="search" class="form-control" wire:model="filterName" placeholder="Cari Nama">
                             </div>
                             <div class="col-lg-4 col-md-6 d-flex align-items-center mt-3 mt-md-0">
                                 <label class="form-label me-2 mb-0">Status</label>
-                                <select class="form-select" aria-label="Default select example">
-                                    <option selected="">Online</option>
+                                <select class="form-select" wire:model="filterStatus" aria-label="Default select example">
+                                    <option value="">All</option>
                                     <option value="1">Offline</option>
                                     <option value="2">Online</option>
                                 </select>
