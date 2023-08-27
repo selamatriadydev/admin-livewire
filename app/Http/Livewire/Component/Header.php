@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Component;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class Header extends Component
@@ -33,6 +34,7 @@ class Header extends Component
         $this->emit('toggledThemeAppChange', $this->themeAppLight);
     }
     public function logout(){
+        Cache::forget('is_online'.Auth::user()->id);
         Auth::logout();
         return redirect()->route('login');
     }
