@@ -11,7 +11,10 @@ class ProfileLog extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
+    
+    protected $listeners = ['editProfile' => 'getProfile'];
     public $logsToday = [], $logsYesterday = [];
+    
     public function mount(){
         $this->logsToday = Audit::where('user_id',auth()->user()->id)->whereDate('created_at', Carbon::now())->get();
         $this->logsYesterday = Audit::where('user_id',auth()->user()->id)->whereDate('created_at', Carbon::now()->subDay())->get();

@@ -26,7 +26,7 @@
                   </div>
                 </div>
                 <div>
-                  <a href="#!" class="btn btn-outline-primary d-none d-md-block">Edit Profile</a>
+                  <a href="#!" class="btn btn-outline-primary d-none d-md-block" wire:click="editProfile">Edit Profile</a>
                 </div>
               </div>
               <!-- nav -->
@@ -107,4 +107,6 @@
           </div>
         </div>
       </div>
+      @include('components.off-canvas')
+      <livewire:component.swal-alert />
 </div>
