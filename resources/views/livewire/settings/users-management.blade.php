@@ -50,7 +50,7 @@
                                 @if ($actCreate)
                                     <a href="#!" wire:click="toggleOffcanvas" class="btn btn-primary me-2" data-bs-toggle="tooltip" data-placement="top" title="New data">+ Add New Data</a>
                                 @endif
-                                <a href="#!" class="btn btn-light ">Export</a>
+                                {{-- <a href="#!" class="btn btn-light ">Export</a> --}}
                                 @if (count($selectedItems))
                                     <a href="#!" class="btn btn-danger " wire:click="deleteSelectedItemsConfirm" data-bs-toggle="tooltip" data-placement="top" title="Delete Selected data">Delete Selected {{ count($selectedItems) }} Data</a>
                                 @endif
