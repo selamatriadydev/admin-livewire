@@ -82,10 +82,13 @@ class User extends Authenticatable implements Auditable
         return $this->roles->name ?? '';
     }
     public function getOnlineAttribute(){
-        if(Cache::has('is_online' . $this->id)){
-            return 'Online '.Carbon::parse($this->last_seen_at)->diffForHumans();
+        if($this->last_seen_at){
+            if(Cache::has('is_online' . $this->id)){
+                return 'Online '.Carbon::parse($this->last_seen_at)->diffForHumans();
+            }
+            return 'Offline '.Carbon::parse($this->last_seen_at)->diffForHumans();
         }
-        return 'Offline '.Carbon::parse($this->last_seen_at)->diffForHumans();
+        return 'Offline';
     }
     public function getOnlineDateAttribute(){
         return Carbon::parse($this->last_seen_at)->diffForHumans();
