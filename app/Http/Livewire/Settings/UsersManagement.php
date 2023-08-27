@@ -103,7 +103,10 @@ class UsersManagement extends Component
             $this->resetInputFields();
             $this->hideOffcanvas();
             $this->alertCreate();
-            $this->user_now = User::whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->count();
+            $this->count_bulan_ini = User::bulanIni()->count();
+            $this->count_all = User::count();
+            $this->count_active = User::statusActive()->count();
+            $this->count_nonactive = User::statusNonActive()->count();
         } catch (\Throwable $e) {
             // return $e->getMessage();
             $this->alertNoData();
@@ -139,6 +142,10 @@ class UsersManagement extends Component
             }
             $this->resetInputFields();
             $this->hideOffcanvas();
+            $this->count_bulan_ini = User::bulanIni()->count();
+            $this->count_all = User::count();
+            $this->count_active = User::statusActive()->count();
+            $this->count_nonactive = User::statusNonActive()->count();
         } catch (\Throwable $e) {
             $this->alertNoData();
             $this->resetInputFields();
@@ -160,7 +167,10 @@ class UsersManagement extends Component
         if($user){
             $user->delete();
             $this->alertRemove();
-            $this->user_now = User::whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->count();
+            $this->count_bulan_ini = User::bulanIni()->count();
+            $this->count_all = User::count();
+            $this->count_active = User::statusActive()->count();
+            $this->count_nonactive = User::statusNonActive()->count();
         }else{
             $this->alertNoData();
         }
@@ -178,7 +188,10 @@ class UsersManagement extends Component
             }
         }
         $this->selectedItems = [];
-        $this->user_now = User::whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->count();
+        $this->count_bulan_ini = User::bulanIni()->count();
+        $this->count_all = User::count();
+        $this->count_active = User::statusActive()->count();
+        $this->count_nonactive = User::statusNonActive()->count();
         $this->alertRemove();
     }
     public function render()
