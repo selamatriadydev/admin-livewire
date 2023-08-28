@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
@@ -20,8 +21,9 @@ class UserSeeder extends Seeder
 
         // Insert data into the database
         foreach ($data as $item) {
-            if(User::where('email', $item['email'])->count() == 0){
-                User::create([
+            if(DB::table('users')->where('email', $item['email'])->count() == 0){
+                DB::table('users')->insert([
+                    'id' => $item['id'],
                     'name' => $item['name'],
                     'email' => $item['email'],
                     'password' => bcrypt('password'),
