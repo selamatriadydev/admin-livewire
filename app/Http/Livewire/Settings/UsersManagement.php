@@ -8,7 +8,7 @@ use App\Http\Livewire\Traits\CheckboxManagerTrait;
 use App\Models\Role;
 use App\Models\User; 
 use Livewire\Component;
-use Livewire\WithPagination;
+use Livewire\WithPagination; 
 
 class UsersManagement extends Component
 {
@@ -30,6 +30,7 @@ class UsersManagement extends Component
     public $roles, $statusUser = [['value' => '1', 'text' => 'Active'], ['value' => '0', 'text' => 'Non Active']];
 
     public function mount(){
+        $this->checkboxDataIdUuid = true;
         $this->roles = Role::get()->map(function($data){
             return ['value' => $data->id, 'text' => $data->name];
         })->toArray();

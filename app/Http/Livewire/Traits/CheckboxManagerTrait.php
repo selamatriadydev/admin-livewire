@@ -5,14 +5,15 @@ namespace App\Http\Livewire\Traits;
 trait CheckboxManagerTrait {
     public $checkAll = [];
     public $checkboxes = [], $selectedItems = [];
+    public $checkboxDataIdUuid = false;
 
     public function updatedCheckAll()
     {
         if($this->checkAll){
             foreach ($this->checkboxes as $key) {
-                // $this->checkboxes[$key] = $this->checkAll;
                 $this->selectedItems[$key] = $this->checkAll;
             }
+            // dd($this->selectedItems);
         }else{
             $this->selectedItems = [];
         }

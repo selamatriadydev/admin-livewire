@@ -53,7 +53,7 @@
                                 {{-- <a href="#!" class="btn btn-light ">Export</a> --}}
                                 @if (count($selectedItems))
                                     <a href="#!" class="btn btn-danger " wire:click="deleteSelectedItemsConfirm" data-bs-toggle="tooltip" data-placement="top" title="Delete Selected data">Delete Selected {{ count($selectedItems) }} Data</a>
-                                @endif
+                                @endif 
                             </div>
                         </div>
                     </div>
