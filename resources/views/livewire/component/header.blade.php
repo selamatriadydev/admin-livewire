@@ -4,7 +4,7 @@
     <!-- navbar -->
         <div class="navbar-custom navbar navbar-expand-lg">
             <div class="container-fluid px-0">
-                <a class="navbar-brand d-block d-md-none" href="../index.html">
+                <a class="navbar-brand d-block d-md-none" href="{{ route('home') }}">
                     <img src="{{ asset('dash-ui/assets/images/brand/logo/logo-2.svg') }}" alt="Image">
                 </a>
                 <a id="nav-toggle" href="#!" class="ms-auto ms-md-0 me-0 me-lg-3 " wire:click="toggledSidebar">

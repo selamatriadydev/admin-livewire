@@ -3,8 +3,8 @@
      <div class="navbar-vertical navbar nav-dashboard">
         <div class="h-100" data-simplebar="init"><div class="simplebar-wrapper" style="margin: 0px;"><div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask"><div class="simplebar-offset" style="right: 0px; bottom: 0px;"><div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: 100%; overflow: hidden scroll;"><div class="simplebar-content" style="padding: 0px;">
             <!-- Brand logo -->
-            <a class="navbar-brand" href="../index.html">
-                <img src="../assets/images/brand/logo/logo-2.svg" alt="dash ui - bootstrap 5 admin dashboard template">
+            <a class="navbar-brand" href="{{ route('home') }}">
+                <img src="{{ asset('dash-ui/assets/images/brand/logo/logo-2.svg') }}" alt="dash ui">
             </a>
             <!-- Navbar nav -->
             <ul class="navbar-nav flex-column" id="sideNavbar">
