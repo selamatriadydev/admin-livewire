@@ -1,0 +1,10 @@
+[
+    {
+      "id": 1,
+      "name": "selamatriadydev",
+      "email": "mamat@gmail.com",
+      "password": "$2y$10$px2LyzZs08kAN6TscHUphOX5mlzs/0uT5BW4ZkgwTI4e9acKZdAmy",
+      "role_id": "0551f016-4a55-44d2-b31f-d2aefad319c5",
+      "status_active": "1"
+    }
+  ]

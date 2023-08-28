@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\SiteHelper;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable implements Auditable
 {
@@ -65,12 +67,34 @@ class User extends Authenticatable implements Auditable
     public function roles(){
         return $this->hasOne(Role::class, 'id', 'role_id');
     }
+    // scope 
+    public function scopeBulanIni($query){
+        return $query->whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'));
+    }
+    public function scopeStatusActive($query){
+        return $query->where('status_active', 1);
+    }
+    public function scopeStatusNonActive($query){
+        return $query->where('status_active', 0);
+    }
 
     public function getRoleNameAttribute(){
         return $this->roles->name ?? '';
     }
     public function getOnlineAttribute(){
-        return $this->last_seen_at >= now()->subMinutes(5) ? 'Ya' : 'Tidak';
+        if($this->last_seen_at){
+            if(Cache::has('is_online' . $this->id)){
+                return 'Online '.Carbon::parse($this->last_seen_at)->diffForHumans();
+            }
+            return 'Offline '.Carbon::parse($this->last_seen_at)->diffForHumans();
+        }
+        return 'Offline';
+    }
+    public function getOnlineDateAttribute(){
+        return Carbon::parse($this->last_seen_at)->diffForHumans();
+    }
+    public function getStatusAttribute(){
+        return $this->status_active == 1 ? 'Active' : 'Non Active';
     }
     public function getAllpermissionsAttribute()
     {  

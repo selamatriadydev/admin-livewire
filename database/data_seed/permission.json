@@ -1,0 +1,22 @@
+[
+    {
+      "id": "0f55ec04-91b2-468c-a180-f25b750a6df5",
+      "name": "manage-manajemen-app",
+      "guard_name": "web"
+    },
+    {
+      "id": "276e9c8b-7614-4020-94b9-426251074683",
+      "name": "manage-dashboard",
+      "guard_name": "web"
+    },
+    {
+      "id": "421283fd-3d72-4d27-82a8-69f36d8301b4",
+      "name": "create-roles",
+      "guard_name": "web"
+    },
+    {
+      "id": "59bc3e45-13f6-4b92-8420-6c09064d1873",
+      "name": "manage-log-activity",
+      "guard_name": "web"
+    }
+  ]

@@ -1,4 +1,5 @@
 <div>
+    <div class="bg-primary pt-10 pb-21"></div>
     <div class="container-fluid mt-n22 px-6">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-12">
@@ -61,7 +62,7 @@
                                             <td>
                                                 @if ($actDetail)
                                                     <button type="button" class="btn btn-info btn-sm" wire:click="detail('{{ $item->id }}')" data-bs-toggle="tooltip" data-placement="top" title="Detail data">
-                                                        Detail
+                                                        Detail <i class="icon-xs" data-feather="eye"></i>
                                                     </button>
                                                 @endif
                                             </td>

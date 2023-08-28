@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <title>{{ $title ?? config('app.name', 'Laravel') }}</title>
@@ -7,7 +7,7 @@
   @livewireStyles
 </head>
 
-<body class="bg-light">
+<body>
   @auth
     <main id="main-wrapper" class="main-wrapper">
         @livewire('component.header')
@@ -17,7 +17,6 @@
         <!-- Page Content -->
         <div id="app-content">
             <div class="app-content-area">
-                <div class="bg-primary pt-10 pb-21"></div>
                 {{ $slot }}
             </div>
         </div>
@@ -43,6 +42,26 @@
           mainElement.classList.remove('toggled');
       }
   });
+  Livewire.on('toggledThemeAppChange', (themeLight) => {
+      if (themeLight === true) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }else if (themeLight === false){
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+  });
+    // In your JavaScript file or script section
+document.addEventListener('livewire:load', function () {
+    // Initialize components here
+    document.documentElement.setAttribute('data-theme', 'light');
+});
+
+document.addEventListener('livewire:update', function () {
+    // Update components here
+    feather.replace(); //reload icon feather
+    $('[data-bs-toggle="tooltip"]').tooltip();
+});
  @endauth
 </script>
 </body>

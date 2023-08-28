@@ -60,22 +60,16 @@
     
                     <div class="d-md-flex justify-content-between mt-4">
                       <div class="mb-2 mb-md-0">
-                        <a href="{{ route('login') }}" class="fs-5">Create An
-                            Account </a>
-                      </div>
-                      <div>
-                        <a href="forget-password.html" class="text-inherit
-                            fs-5">Forgot your password?</a>
+                        <a href="{{ route('login') }}" class="fs-5">Login </a>
                       </div>
     
                     </div>
                   </div>
-    
-    
                 </form>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <livewire:component.swal-alert />
 </div>

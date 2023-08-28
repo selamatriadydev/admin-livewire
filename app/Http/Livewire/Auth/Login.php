@@ -15,13 +15,17 @@ class Login extends Component
     public $password;
 
     protected $rules = [
-        'email' => 'required',
-        'password' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|min:5|max:20',
     ];
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
     public function login(){
         $this->validate();
         try {
-            $credential = ['email' => $this->email, 'password'=> $this->password];
+            $credential = ['email' => $this->email, 'password'=> $this->password, 'status_active' => 1];
             if(Auth::attempt($credential)){
                     $data = [
                         'auditable_id' => auth()->user()->id,
@@ -39,7 +43,7 @@ class Login extends Component
                 $this->alertSwal('success', 'Login Successfully');
                 return redirect()->route('home');
             }else{
-                $this->alertSwal('warning', 'Login Failed, Email or password failed');
+                $this->alertSwal('warning', 'Login Failed, Email or password failed or user is non active');
             }
         } catch (\Exception $e){
 

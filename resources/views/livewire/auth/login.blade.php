@@ -16,11 +16,11 @@
                   <!-- Username -->
                   <div class="mb-3">
                     <label for="email" class="form-label">Username or email</label>
-                    <input type="email" wire:model.lazy="email" class="form-control @error('email') is-invalid @enderror"placeholder="Email address here">
+                    <input type="text" wire:model.lazy="email" class="form-control @error('email') is-invalid @enderror"placeholder="Email address here">
                     @error('email')
                         <div class="invalid-feedback">
                             {{ $message }}
-                        </div>
+                        </div> 
                     @enderror
                   </div>
                   <!-- Password -->
@@ -53,8 +53,6 @@
     
                     </div>
                   </div>
-    
-    
                 </form>
               </div>
             </div>

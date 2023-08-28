@@ -1,0 +1,74 @@
+[
+    {
+      "id": "9e037cff-3db5-4660-b065-e295abeeb452",
+      "parrent_id": "c60c3fc5-f881-48b8-add7-4e2faf3561b4",
+      "icon": "-",
+      "is_sidebar": 1,
+      "title": "Role",
+      "url": "roles",
+      "method": "roles",
+      "slug": "roles",
+      "child": "",
+      "sort": 1
+    },
+    {
+      "id": "c60c3fc5-f881-48b8-add7-4e2faf3561b4",
+      "parrent_id": "0",
+      "icon": "home",
+      "is_sidebar": 1,
+      "title": "Manajemen Aplikasi",
+      "url": "manajemen-app",
+      "method": "manajemen-app",
+      "slug": "manajemen-app",
+      "child": "",
+      "sort": 1
+    },
+    {
+      "id": "cb34d1c9-96df-48bd-a1c8-6ff3774093a5",
+      "parrent_id": "c60c3fc5-f881-48b8-add7-4e2faf3561b4",
+      "icon": "user",
+      "is_sidebar": 1,
+      "title": "User",
+      "url": "users",
+      "method": "users",
+      "slug": "users",
+      "child": "",
+      "sort": 3
+    },
+    {
+      "id": "ed2c723e-523c-4a34-a6e5-7bf6c579d24a",
+      "parrent_id": "c60c3fc5-f881-48b8-add7-4e2faf3561b4",
+      "icon": "home",
+      "is_sidebar": 1,
+      "title": "Log Activitas",
+      "url": "log-activity",
+      "method": "log-activity",
+      "slug": "log-activity",
+      "child": "",
+      "sort": 3
+    },
+    {
+      "id": "f15edb08-cbeb-4064-ae46-4090d5db6688",
+      "parrent_id": "0",
+      "icon": "home",
+      "is_sidebar": 1,
+      "title": "Dashboard",
+      "url": "home",
+      "method": "home",
+      "slug": "dashboard",
+      "child": "",
+      "sort": 2
+    },
+    {
+      "id": "f39348ac-2112-4eb0-a54e-ceb82a8cd12e",
+      "parrent_id": "c60c3fc5-f881-48b8-add7-4e2faf3561b4",
+      "icon": "home",
+      "is_sidebar": 1,
+      "title": "modules",
+      "url": "modules",
+      "method": "modules",
+      "slug": "modules",
+      "child": "",
+      "sort": 2
+    }
+  ]

@@ -1,0 +1,12 @@
+[
+    {
+      "id": "0551f016-4a55-44d2-b31f-d2aefad319c5",
+      "name": "admin",
+      "guard_name": "web"
+    },
+    {
+      "id": "16d92c25-7f81-4bda-b1ea-22e453368ddb",
+      "name": "IT",
+      "guard_name": "web"
+    }
+  ]
